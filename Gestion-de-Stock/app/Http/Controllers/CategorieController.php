@@ -22,10 +22,9 @@ class CategorieController extends Controller
      * Display a listing of the categories.
      *
      * @return \Illuminate\View\View
-     */
-    public function index()
+     */    public function index()
     {
-        $categories = Categorie::all();
+        $categories = Categorie::paginate(10);
         return view('categories.index', compact('categories'));
     }
 

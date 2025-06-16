@@ -23,10 +23,9 @@ class ProduitController extends Controller
      * Display a listing of the products.
      *
      * @return \Illuminate\View\View
-     */
-    public function index()
+     */    public function index()
     {
-        $produits = Produit::with('categorie')->get();
+        $produits = Produit::with('categorie')->paginate(10);
         return view('produits.index', compact('produits'));
     }
 

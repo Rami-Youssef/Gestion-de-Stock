@@ -80,9 +80,13 @@
                                         </div>
                                     </td>
                                 </tr>
-                                @endforeach
-                            </tbody>
+                                @endforeach                            </tbody>
                         </table>
+                    </div>
+                    <div class="card-footer py-4">
+                        <nav class="d-flex justify-content-center" aria-label="...">
+                            {{ $produits->links() }}
+                        </nav>
                     </div>
                 </div>
             </div>

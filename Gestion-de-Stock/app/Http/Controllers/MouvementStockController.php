@@ -24,12 +24,11 @@ class MouvementStockController extends Controller
      * Display a listing of the stock movements.
      *
      * @return \Illuminate\View\View
-     */
-    public function index()
+     */    public function index()
     {
         $mouvements = MouvementStock::with(['produit', 'utilisateur'])
             ->orderBy('date_cmd', 'desc')
-            ->get();
+            ->paginate(10);
         
         return view('mouvements.index', compact('mouvements'));
     }
