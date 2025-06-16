@@ -32,9 +32,9 @@ Route::get('/home', [DashboardController::class, 'index'])->name('home');
 // Auth protected routes
 Route::group(['middleware' => 'auth'], function () {
     // Profile management
-    Route::get('profile', ['as' => 'profile.edit', 'uses' => [ProfileController::class, 'edit']]);
-    Route::put('profile', ['as' => 'profile.update', 'uses' => [ProfileController::class, 'update']]);
-    Route::put('profile/password', ['as' => 'profile.password', 'uses' => [ProfileController::class, 'password']]);
+    Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('profile/password', [ProfileController::class, 'password'])->name('profile.password');
     
     // Categories routes
     Route::resource('categories', CategorieController::class);
