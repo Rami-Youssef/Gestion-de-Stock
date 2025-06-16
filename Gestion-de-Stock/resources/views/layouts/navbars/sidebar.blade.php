@@ -20,19 +20,19 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
                     <div class=" dropdown-header noti-title">
-                        <h6 class="text-overflow m-0">{{ __('Welcome!') }}</h6>
+                        <h6 class="text-overflow m-0">{{ __('Bienvenue!') }}</h6>
                     </div>
                     <a href="{{ route('profile.edit') }}" class="dropdown-item">
                         <i class="ni ni-single-02"></i>
-                        <span>{{ __('My profile') }}</span>
+                        <span>{{ __('Mon profil') }}</span>
                     </a>
                     <a href="#" class="dropdown-item">
                         <i class="ni ni-settings-gear-65"></i>
-                        <span>{{ __('Settings') }}</span>
+                        <span>{{ __('Paramètres') }}</span>
                     </a>
                     <a href="#" class="dropdown-item">
                         <i class="ni ni-calendar-grid-58"></i>
-                        <span>{{ __('Activity') }}</span>
+                        <span>{{ __('Activité') }}</span>
                     </a>
                     <a href="#" class="dropdown-item">
                         <i class="ni ni-support-16"></i>
@@ -42,7 +42,7 @@
                     <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault();
                     document.getElementById('logout-form').submit();">
                         <i class="ni ni-user-run"></i>
-                        <span>{{ __('Logout') }}</span>
+                        <span>{{ __('Déconnexion') }}</span>
                     </a>
                 </div>
             </li>
@@ -68,7 +68,7 @@
             <!-- Form -->
             <form class="mt-4 mb-3 d-md-none">
                 <div class="input-group input-group-rounded input-group-merge">
-                    <input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="{{ __('Search') }}" aria-label="Search">
+                    <input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="{{ __('Rechercher') }}" aria-label="Rechercher">
                     <div class="input-group-prepend">
                         <div class="input-group-text">
                             <span class="fa fa-search"></span>
@@ -85,54 +85,38 @@
                 </li>
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="#navbar-inventory" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-inventory">
+                    <a class="nav-link" href="{{ route('produits.index') }}">
                         <i class="ni ni-box-2 text-success"></i>
-                        <span class="nav-link-text">{{ __('Gestion de Stock') }}</span>
+                        <span class="nav-link-text">{{ __('Produits') }}</span>
                     </a>
-                    <div class="collapse" id="navbar-inventory">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('produits.index') }}">
-                                    {{ __('Produits') }}
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('categories.index') }}">
-                                    {{ __('Catégories') }}
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('mouvements.index') }}">
-                                    {{ __('Mouvements de Stock') }}
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('categories.index') }}">
+                        <i class="ni ni-tag text-primary"></i>
+                        <span class="nav-link-text">{{ __('Catégories') }}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('mouvements.index') }}">
+                        <i class="ni ni-delivery-fast text-orange"></i>
+                        <span class="nav-link-text">{{ __('Mouvements de Stock') }}</span>
+                    </a>
                 </li>
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="#navbar-user" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-user">
+                    <a class="nav-link" href="{{ route('profile.edit') }}">
                         <i class="ni ni-single-02 text-info"></i>
-                        <span class="nav-link-text">{{ __('Utilisateurs') }}</span>
+                        <span class="nav-link-text">{{ __('Mon profil') }}</span>
                     </a>
-
-                    <div class="collapse" id="navbar-user">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('profile.edit') }}">
-                                    {{ __('Mon profil') }}
-                                </a>
-                            </li>
-                            @if(Auth::user()->role === 'admin')
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('user.index') }}">
-                                    {{ __('Gestion des Utilisateurs') }}
-                                </a>
-                            </li>
-                            @endif
-                        </ul>
-                    </div>
                 </li>
+                @if(Auth::user()->role === 'admin')
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('user.index') }}">
+                        <i class="ni ni-circle-08 text-pink"></i>
+                        <span class="nav-link-text">{{ __('Gestion des Utilisateurs') }}</span>
+                    </a>
+                </li>
+                @endif
             </ul>
         </div>
     </div>
