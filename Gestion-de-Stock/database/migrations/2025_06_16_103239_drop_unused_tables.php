@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('password_resets', function (Blueprint $table) {
-            $table->string('email')->index();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
-        });
+        // Drop the default Laravel tables that we don't need
+        Schema::dropIfExists('users');
+        Schema::dropIfExists('password_resets');
+        Schema::dropIfExists('failed_jobs');
+        Schema::dropIfExists('personal_access_tokens');
     }
 
     /**
@@ -27,6 +27,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('password_resets');
+        // We don't recreate these tables since we removed their migrations
+        // This method intentionally left empty
     }
 };

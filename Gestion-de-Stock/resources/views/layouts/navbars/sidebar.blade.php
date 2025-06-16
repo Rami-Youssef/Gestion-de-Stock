@@ -79,28 +79,57 @@
             <!-- Navigation -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('home') }}">
-                        <i class="ni ni-tv-2 text-primary"></i> {{ __('Dashboard') }}
+                    <a class="nav-link" href="{{ route('dashboard') }}">
+                        <i class="ni ni-tv-2 text-primary"></i> {{ __('Tableau de bord') }}
                     </a>
                 </li>
+                
                 <li class="nav-item">
-                    <a class="nav-link active" href="#navbar-examples" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-examples">
-                        <i class="fab fa-laravel" style="color: #f4645f;"></i>
-                        <span class="nav-link-text" style="color: #f4645f;">{{ __('Laravel Examples') }}</span>
+                    <a class="nav-link" href="#navbar-inventory" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-inventory">
+                        <i class="ni ni-box-2 text-success"></i>
+                        <span class="nav-link-text">{{ __('Gestion de Stock') }}</span>
+                    </a>
+                    <div class="collapse" id="navbar-inventory">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('produits.index') }}">
+                                    {{ __('Produits') }}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('categories.index') }}">
+                                    {{ __('Catégories') }}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('mouvements.index') }}">
+                                    {{ __('Mouvements de Stock') }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="#navbar-user" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-user">
+                        <i class="ni ni-single-02 text-info"></i>
+                        <span class="nav-link-text">{{ __('Utilisateurs') }}</span>
                     </a>
 
-                    <div class="collapse show" id="navbar-examples">
+                    <div class="collapse" id="navbar-user">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('profile.edit') }}">
-                                    {{ __('User profile') }}
+                                    {{ __('Mon profil') }}
                                 </a>
                             </li>
+                            @if(Auth::user()->role === 'admin')
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('user.index') }}">
-                                    {{ __('User Management') }}
+                                    {{ __('Gestion des Utilisateurs') }}
                                 </a>
                             </li>
+                            @endif
                         </ul>
                     </div>
                 </li>

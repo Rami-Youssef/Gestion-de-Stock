@@ -47,7 +47,7 @@ class ProfileController extends Controller
             return back()->withErrors(['not_allow_password' => __('You are not allowed to change the password for a default user.')]);
         }
 
-        auth()->user()->update(['password' => Hash::make($request->get('password'))]);
+        auth()->user()->update(['motdepasse' => Hash::make($request->get('password'))]);
 
         return back()->withPasswordStatus(__('Password successfully updated.'));
     }
