@@ -28,10 +28,13 @@
                                 <h3 class="mb-0">Liste des Utilisateurs</h3>
                             </div>
                             <div class="col-4 text-right">
-                                <button class="btn btn-sm {{ isset($search) || isset($role) ? 'btn-danger' : 'btn-primary' }}" type="button" data-toggle="collapse" data-target="#searchCollapse" aria-expanded="false" aria-controls="searchCollapse">
+                                <button class="btn btn-sm {{ isset($search) || isset($role) || (isset($sort) && $sort !== 'nom_asc') ? 'btn-danger' : 'btn-primary' }}" type="button" data-toggle="collapse" data-target="#searchCollapse" aria-expanded="false" aria-controls="searchCollapse">
                                     <i class="fas fa-filter"></i> Filtres
-                                    @if(isset($search) || isset($role))
-                                        <span class="filter-badge">{{ isset($search) && isset($role) ? '2' : '1' }}</span>
+                                    @php 
+                                        $filterCount = (isset($search) ? 1 : 0) + (isset($role) ? 1 : 0) + ((isset($sort) && $sort !== 'nom_asc') ? 1 : 0);
+                                    @endphp
+                                    @if($filterCount > 0)
+                                        <span class="filter-badge">{{ $filterCount }}</span>
                                     @endif
                                 </button>
                             </div>
@@ -40,13 +43,13 @@
                         <div class="collapse mt-3 filter-collapse" id="searchCollapse">
                             <form action="{{ route('user.index') }}" method="GET">
                                 <div class="row">
-                                    <div class="col-md-5">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="search">Recherche</label>
                                             <input type="text" class="form-control form-control-sm" id="search" name="search" placeholder="Nom ou email" value="{{ $search ?? '' }}">
                                         </div>
                                     </div>
-                                    <div class="col-md-5">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="role">Rôle</label>
                                             <select class="form-control form-control-sm filter-select" id="role" name="role">
@@ -57,8 +60,23 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="sort">Trier par</label>
+                                            <select class="form-control form-control-sm filter-select" id="sort" name="sort">
+                                                <option value="nom_asc" {{ isset($sort) && $sort == 'nom_asc' ? 'selected' : '' }}>Nom (A-Z)</option>
+                                                <option value="nom_desc" {{ isset($sort) && $sort == 'nom_desc' ? 'selected' : '' }}>Nom (Z-A)</option>
+                                                <option value="email_asc" {{ isset($sort) && $sort == 'email_asc' ? 'selected' : '' }}>Email (A-Z)</option>
+                                                <option value="email_desc" {{ isset($sort) && $sort == 'email_desc' ? 'selected' : '' }}>Email (Z-A)</option>
+                                                <option value="role_asc" {{ isset($sort) && $sort == 'role_asc' ? 'selected' : '' }}>Rôle (A-Z)</option>
+                                                <option value="role_desc" {{ isset($sort) && $sort == 'role_desc' ? 'selected' : '' }}>Rôle (Z-A)</option>
+                                                <option value="recent" {{ isset($sort) && $sort == 'recent' ? 'selected' : '' }}>Plus récent</option>
+                                                <option value="ancien" {{ isset($sort) && $sort == 'ancien' ? 'selected' : '' }}>Plus ancien</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="col-md-2 align-self-end filter-actions">
-                                        <button type="submit" class="btn btn-primary btn-sm">Rechercher</button>
+                                        <button type="submit" class="btn btn-primary btn-sm">Appliquer</button>
                                         <a href="{{ route('user.index') }}" class="btn btn-secondary btn-sm btn-reset-filters">Réinitialiser</a>
                                     </div>
                                 </div>

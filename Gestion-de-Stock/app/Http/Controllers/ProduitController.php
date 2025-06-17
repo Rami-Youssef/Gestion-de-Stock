@@ -22,11 +22,11 @@ class ProduitController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\View\View
-     */
-    public function index(Request $request)
+     */    public function index(Request $request)
     {
         $search = $request->input('search');
         $category = $request->input('category');
+        $sort = $request->input('sort', 'nom_asc'); // Default sort is alphabetical
         
         $query = Produit::with('categorie');
           if ($search) {
@@ -40,10 +40,42 @@ class ProduitController extends Controller
             $query->where('categorie_id', $category);
         }
         
+        // Apply sorting
+        switch ($sort) {
+            case 'nom_desc':
+                $query->orderBy('nom', 'desc');
+                break;
+            case 'prix_asc':
+                $query->orderBy('prix', 'asc');
+                break;
+            case 'prix_desc':
+                $query->orderBy('prix', 'desc');
+                break;
+            case 'quantite_asc':
+                $query->orderBy('quantite', 'asc');
+                break;
+            case 'quantite_desc':
+                $query->orderBy('quantite', 'desc');
+                break;
+            case 'categorie_asc':
+                $query->join('categories', 'produits.categorie_id', '=', 'categories.id')
+                      ->orderBy('categories.nom', 'asc')
+                      ->select('produits.*');
+                break;
+            case 'categorie_desc':
+                $query->join('categories', 'produits.categorie_id', '=', 'categories.id')
+                      ->orderBy('categories.nom', 'desc')
+                      ->select('produits.*');
+                break;
+            default: // nom_asc
+                $query->orderBy('nom', 'asc');
+                break;
+        }
+        
         $produits = $query->paginate(10)->withQueryString();
         $categories = \App\Models\Categorie::all();
         
-        return view('produits.index', compact('produits', 'categories', 'search', 'category'));
+        return view('produits.index', compact('produits', 'categories', 'search', 'category', 'sort'));
     }
 
     /**

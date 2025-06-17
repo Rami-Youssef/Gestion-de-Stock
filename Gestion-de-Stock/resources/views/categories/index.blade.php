@@ -22,28 +22,48 @@
             <div class="col">
                 <div class="card shadow">
                     <div class="card-header border-0">
-                        <div class="row align-items-center">
-                            <div class="col-8">
+                        <div class="row align-items-center">                            <div class="col-8">
                                 <h3 class="mb-0">Liste des Catégories</h3>
                             </div>
-                            <div class="col-4">                                <form action="{{ route('categories.index') }}" method="GET" class="navbar-search form-inline mr-sm-3">
-                                    <div class="form-group mb-0">
-                                        <div class="input-group input-group-alternative">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                            </div>
-                                            <input class="form-control" placeholder="Rechercher..." type="text" name="search" value="{{ $search ?? '' }}">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary" type="submit">Rechercher</button>
-                                                @if(isset($search))
-                                                    <a href="{{ route('categories.index') }}" class="btn btn-secondary btn-reset-filters">
-                                                        <i class="fas fa-times"></i>
-                                                    </a>
-                                                @endif
-                                            </div>
+                            <div class="col-4 text-right">
+                                <button class="btn btn-sm {{ isset($search) || (isset($sort) && $sort !== 'nom_asc') ? 'btn-danger' : 'btn-primary' }}" type="button" data-toggle="collapse" data-target="#searchCollapse" aria-expanded="false" aria-controls="searchCollapse">
+                                    <i class="fas fa-filter"></i> Filtres
+                                    @php 
+                                        $filterCount = (isset($search) ? 1 : 0) + ((isset($sort) && $sort !== 'nom_asc') ? 1 : 0);
+                                    @endphp
+                                    @if($filterCount > 0)
+                                        <span class="filter-badge">{{ $filterCount }}</span>
+                                    @endif
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="collapse mt-3 filter-collapse" id="searchCollapse">
+                            <form action="{{ route('categories.index') }}" method="GET">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label for="search">Recherche</label>
+                                            <input type="text" class="form-control form-control-sm" id="search" name="search" placeholder="Nom de catégorie" value="{{ $search ?? '' }}">
                                         </div>
                                     </div>
-                                </form>
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label for="sort">Trier par</label>
+                                            <select class="form-control form-control-sm filter-select" id="sort" name="sort">
+                                                <option value="nom_asc" {{ isset($sort) && $sort == 'nom_asc' ? 'selected' : '' }}>Nom (A-Z)</option>
+                                                <option value="nom_desc" {{ isset($sort) && $sort == 'nom_desc' ? 'selected' : '' }}>Nom (Z-A)</option>
+                                                <option value="produits_count" {{ isset($sort) && $sort == 'produits_count' ? 'selected' : '' }}>Nombre de produits</option>
+                                                <option value="recent" {{ isset($sort) && $sort == 'recent' ? 'selected' : '' }}>Plus récentes</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 align-self-end filter-actions">
+                                        <button type="submit" class="btn btn-primary btn-sm">Appliquer</button>
+                                        <a href="{{ route('categories.index') }}" class="btn btn-secondary btn-sm btn-reset-filters">Réinitialiser</a>
+                                    </div>
+                                </div>
+                            </form>
                             </div>
                         </div>
                     </div>

@@ -34,6 +34,7 @@ class UserController extends Controller
     {
         $search = $request->input('search');
         $role = $request->input('role');
+        $sort = $request->input('sort', 'nom_asc'); // Default sort by name
         
         $query = Utilisateur::query();
         
@@ -48,11 +49,39 @@ class UserController extends Controller
             $query->where('role', $role);
         }
         
+        // Apply sorting
+        switch ($sort) {
+            case 'email_asc':
+                $query->orderBy('email', 'asc');
+                break;
+            case 'email_desc':
+                $query->orderBy('email', 'desc');
+                break;
+            case 'role_asc':
+                $query->orderBy('role', 'asc');
+                break;
+            case 'role_desc':
+                $query->orderBy('role', 'desc');
+                break;
+            case 'recent':
+                $query->orderBy('created_at', 'desc');
+                break;
+            case 'ancien':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'nom_desc':
+                $query->orderBy('utilisateur', 'desc');
+                break;
+            default: // nom_asc
+                $query->orderBy('utilisateur', 'asc');
+                break;
+        }
+        
         $users = $query->paginate(10)->withQueryString();
         
         $roles = Utilisateur::select('role')->distinct()->pluck('role');
         
-        return view('users.index', compact('users', 'search', 'role', 'roles'));
+        return view('users.index', compact('users', 'search', 'role', 'roles', 'sort'));
     }
     
     /**

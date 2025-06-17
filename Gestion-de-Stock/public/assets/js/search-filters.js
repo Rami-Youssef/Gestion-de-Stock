@@ -1,8 +1,12 @@
 // Search & Filter functionality for Gestion-de-Stock
 document.addEventListener('DOMContentLoaded', function() {    // Auto-expand filter section if there are active filters
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('search') || urlParams.has('category') || urlParams.has('type') || 
-        urlParams.has('role') || (urlParams.has('sort') && urlParams.get('sort') !== 'date_desc')) {
+    // Check for any filter parameters or non-default sorts
+    const hasActiveFilters = urlParams.has('search') || urlParams.has('category') || urlParams.has('type') || 
+        urlParams.has('role') || 
+        (urlParams.has('sort') && !['date_desc', 'nom_asc'].includes(urlParams.get('sort')));
+    
+    if (hasActiveFilters) {
         const filterCollapse = document.getElementById('searchCollapse');
         if (filterCollapse) {
             const bsCollapse = new bootstrap.Collapse(filterCollapse, {

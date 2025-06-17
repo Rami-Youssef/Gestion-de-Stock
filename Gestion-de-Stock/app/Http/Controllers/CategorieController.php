@@ -21,10 +21,10 @@ class CategorieController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\View\View
-     */
-    public function index(Request $request)
+     */    public function index(Request $request)
     {
         $search = $request->input('search');
+        $sort = $request->input('sort', 'nom_asc'); // Default sort alphabetically
         
         $query = Categorie::query();
         
@@ -32,9 +32,25 @@ class CategorieController extends Controller
             $query->where('nom', 'like', '%' . $search . '%');
         }
         
+        // Apply sorting
+        switch ($sort) {
+            case 'nom_desc':
+                $query->orderBy('nom', 'desc');
+                break;
+            case 'produits_count':
+                $query->withCount('produits')->orderBy('produits_count', 'desc');
+                break;
+            case 'recent':
+                $query->orderBy('created_at', 'desc');
+                break;
+            default: // nom_asc
+                $query->orderBy('nom', 'asc');
+                break;
+        }
+        
         $categories = $query->paginate(10)->withQueryString();
         
-        return view('categories.index', compact('categories', 'search'));
+        return view('categories.index', compact('categories', 'search', 'sort'));
     }
 
     /**
