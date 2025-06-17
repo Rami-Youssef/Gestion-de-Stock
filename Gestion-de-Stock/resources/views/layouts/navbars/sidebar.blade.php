@@ -26,18 +26,6 @@
                         <i class="ni ni-single-02"></i>
                         <span>{{ __('Mon profil') }}</span>
                     </a>
-                    <a href="#" class="dropdown-item">
-                        <i class="ni ni-settings-gear-65"></i>
-                        <span>{{ __('Paramètres') }}</span>
-                    </a>
-                    <a href="#" class="dropdown-item">
-                        <i class="ni ni-calendar-grid-58"></i>
-                        <span>{{ __('Activité') }}</span>
-                    </a>
-                    <a href="#" class="dropdown-item">
-                        <i class="ni ni-support-16"></i>
-                        <span>{{ __('Support') }}</span>
-                    </a>
                     <div class="dropdown-divider"></div>
                     <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault();
                     document.getElementById('logout-form').submit();">
@@ -65,17 +53,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Form -->
-            <form class="mt-4 mb-3 d-md-none">
-                <div class="input-group input-group-rounded input-group-merge">
-                    <input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="{{ __('Rechercher') }}" aria-label="Rechercher">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">
-                            <span class="fa fa-search"></span>
-                        </div>
-                    </div>
-                </div>
-            </form>
             <!-- Navigation -->
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -103,12 +80,6 @@
                     </a>
                 </li>
                 
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('profile.edit') }}">
-                        <i class="ni ni-single-02 text-info"></i>
-                        <span class="nav-link-text">{{ __('Mon profil') }}</span>
-                    </a>
-                </li>
                 @if(Auth::user()->role === 'admin')
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('user.index') }}">
