@@ -117,7 +117,7 @@
                                             {{ $produit->quantite }}
                                         @endif
                                     </td>
-                                    <td>{{ number_format($produit->prix, 2) }} €</td>
+                                    <td>{{ number_format($produit->prix, 2) }} MAD</td>
                                     <td>
                                         <div class="dropdown">
                                             <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

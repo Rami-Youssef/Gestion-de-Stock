@@ -64,7 +64,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="form-control-label" for="input-prix">Prix unitaire (€)</label>
+                                        <label class="form-control-label" for="input-prix">Prix unitaire (MAD)</label>
                                         <input type="number" name="prix" id="input-prix" class="form-control form-control-alternative" placeholder="Prix unitaire" value="{{ old('prix', $produit->prix) }}" min="0" step="0.01" required>
                                     </div>
                                 </div>

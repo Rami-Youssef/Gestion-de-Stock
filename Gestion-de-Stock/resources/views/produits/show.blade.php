@@ -54,12 +54,12 @@
                         
                         <div class="row mb-3">
                             <div class="col-md-4 font-weight-bold">Prix unitaire :</div>
-                            <div class="col-md-8">{{ number_format($produit->prix, 2) }} €</div>
+                            <div class="col-md-8">{{ number_format($produit->prix, 2) }} MAD</div>
                         </div>
                         
                         <div class="row mb-3">
                             <div class="col-md-4 font-weight-bold">Valeur en stock :</div>
-                            <div class="col-md-8">{{ number_format($produit->quantite * $produit->prix, 2) }} €</div>
+                            <div class="col-md-8">{{ number_format($produit->quantite * $produit->prix, 2) }} MAD</div>
                         </div>
                         
                         <div class="text-center mt-4">
