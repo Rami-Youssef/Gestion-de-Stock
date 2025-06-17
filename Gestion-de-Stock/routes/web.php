@@ -48,7 +48,7 @@ Route::group(['middleware' => 'auth'], function () {
     
     // Admin only routes
     Route::group(['middleware' => 'role:admin'], function () {
-        Route::resource('user', UserController::class, ['except' => ['show']]);
+        Route::resource('user', UserController::class);
     });
 });
 

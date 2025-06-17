@@ -57,10 +57,9 @@
                                         <div class="dropdown">
                                             <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fas fa-ellipsis-v"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                                <a class="dropdown-item" href="{{ route('categories.edit', $categorie) }}">Modifier</a>
-                                                <form action="{{ route('categories.destroy', $categorie) }}" method="POST" style="display: inline;">
+                                            </a>                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                                <a class="dropdown-item" href="{{ route('categories.edit', ['category' => $categorie->id]) }}">Modifier</a>
+                                                <form action="{{ route('categories.destroy', ['category' => $categorie->id]) }}" method="POST" style="display: inline;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="dropdown-item" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie?')">Supprimer</button>

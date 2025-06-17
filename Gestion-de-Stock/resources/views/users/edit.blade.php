@@ -1,0 +1,91 @@
+@extends('layouts.app')
+
+@section('content')
+    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row">
+                    <div class="col">
+                        <h1 class="text-white mb-0">Modifier l'Utilisateur</h1>
+                        <p class="text-white">Modifiez les informations de l'utilisateur</p>
+                    </div>
+                    <div class="col text-right">
+                        <a href="{{ route('user.index') }}" class="btn btn-white">Retour à la liste</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container-fluid mt--7">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card bg-secondary shadow">
+                    <div class="card-header bg-white border-0">
+                        <h3 class="mb-0">Détails de l'utilisateur</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="{{ route('user.update', $user) }}" autocomplete="off">
+                            @csrf
+                            @method('put')
+                            
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul class="mb-0">
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            <div class="form-group">
+                                <label for="utilisateur" class="form-control-label">Nom d'utilisateur</label>
+                                <input type="text" name="utilisateur" id="utilisateur" class="form-control" value="{{ old('utilisateur', $user->utilisateur) }}" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email" class="form-control-label">Adresse email</label>
+                                <input type="email" name="email" id="email" class="form-control" value="{{ old('email', $user->email) }}" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="password" class="form-control-label">Nouveau mot de passe (laisser vide pour ne pas changer)</label>
+                                <input type="password" name="password" id="password" class="form-control">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="password_confirmation" class="form-control-label">Confirmation du mot de passe</label>
+                                <input type="password" name="password_confirmation" id="password_confirmation" class="form-control">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="role" class="form-control-label">Rôle</label>
+                                <select name="role" id="role" class="form-control" required>
+                                    <option value="utilisateur" {{ (old('role', $user->role) == 'utilisateur') ? 'selected' : '' }}>Utilisateur</option>
+                                    <option value="admin" {{ (old('role', $user->role) == 'admin') ? 'selected' : '' }}>Administrateur</option>
+                                </select>
+                            </div>
+                              <div class="text-center">
+                                <button type="submit" class="btn btn-success mt-4">Mettre à jour</button>
+                            </div>
+                        </form>
+                        
+                        @if(Auth::user()->id !== $user->id)
+                        <hr class="my-4">
+                        <form method="post" action="{{ route('user.destroy', $user) }}" class="text-center">
+                            @csrf
+                            @method('delete')
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">
+                                Supprimer l'utilisateur
+                            </button>
+                        </form>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        @include('layouts.footers.auth')
+    </div>
+@endsection

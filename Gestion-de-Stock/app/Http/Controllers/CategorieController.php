@@ -56,55 +56,50 @@ class CategorieController extends Controller
 
         return redirect()->route('categories.index')
             ->with('success', 'Catégorie créée avec succès');
-    }
-
-    /**
+    }    /**
      * Show the form for editing the specified category.
      *
-     * @param  \App\Models\Categorie  $categorie
+     * @param  \App\Models\Categorie  $category
      * @return \Illuminate\View\View
      */
-    public function edit(Categorie $categorie)
+    public function edit(Categorie $category)
     {
-        return view('categories.edit', compact('categorie'));
+        return view('categories.edit', ['categorie' => $category]);
     }
 
     /**
      * Update the specified category in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Categorie  $categorie
+     * @param  \App\Models\Categorie  $category
      * @return \Illuminate\Http\RedirectResponse
-     */
-    public function update(Request $request, Categorie $categorie)
+     */    public function update(Request $request, Categorie $category)
     {
         $request->validate([
-            'nom' => 'required|string|max:255|unique:categories,nom,'.$categorie->id
+            'nom' => 'required|string|max:255|unique:categories,nom,'.$category->id
         ]);
 
-        $categorie->update([
+        $category->update([
             'nom' => $request->nom
         ]);
 
         return redirect()->route('categories.index')
             ->with('success', 'Catégorie mise à jour avec succès');
-    }
-
-    /**
+    }    /**
      * Remove the specified category from storage.
      *
-     * @param  \App\Models\Categorie  $categorie
+     * @param  \App\Models\Categorie  $category
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Categorie $categorie)
+    public function destroy(Categorie $category)
     {
         // Check if the category has products
-        if ($categorie->produits()->count() > 0) {
+        if ($category->produits()->count() > 0) {
             return redirect()->route('categories.index')
                 ->with('error', 'Impossible de supprimer cette catégorie car elle contient des produits');
         }
 
-        $categorie->delete();
+        $category->delete();
 
         return redirect()->route('categories.index')
             ->with('success', 'Catégorie supprimée avec succès');

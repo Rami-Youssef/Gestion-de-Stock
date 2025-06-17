@@ -23,9 +23,8 @@
                 <div class="card bg-secondary shadow">
                     <div class="card-header bg-white border-0">
                         <h3 class="mb-0">Détails de la catégorie</h3>
-                    </div>
-                    <div class="card-body">
-                        <form method="post" action="{{ route('categories.update', $categorie) }}" autocomplete="off">
+                    </div>                    <div class="card-body">
+                        <form method="post" action="{{ route('categories.update', ['category' => $categorie->id]) }}" autocomplete="off">
                             @csrf
                             @method('PUT')
                             

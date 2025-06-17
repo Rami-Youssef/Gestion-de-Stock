@@ -32,9 +32,27 @@ class UserRequest extends FormRequest
             'email' => [
                 'required', 'email', Rule::unique((new Utilisateur)->getTable())->ignore($this->route()->user->id ?? null)
             ],
-            'motdepasse' => [
+            'password' => [
                 $this->route()->user ? 'nullable' : 'required', 'confirmed', 'min:6'
+            ],
+            'role' => [
+                'required', Rule::in(['admin', 'utilisateur'])
             ]
+        ];
+    }
+    
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'utilisateur' => 'nom d\'utilisateur',
+            'email' => 'adresse email',
+            'password' => 'mot de passe',
+            'role' => 'rôle'
         ];
     }
 }
