@@ -22,7 +22,59 @@
             <div class="col">
                 <div class="card shadow">
                     <div class="card-header border-0">
-                        <h3 class="mb-0">Historique des Mouvements</h3>
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h3 class="mb-0">Historique des Mouvements</h3>
+                            </div>                            <div class="col-4 text-right">
+                                <button class="btn btn-sm {{ isset($search) || isset($type) || (isset($sort) && $sort !== 'date_desc') ? 'btn-danger' : 'btn-primary' }}" type="button" data-toggle="collapse" data-target="#searchCollapse" aria-expanded="false" aria-controls="searchCollapse">
+                                    <i class="fas fa-filter"></i> Filtres
+                                    @php 
+                                        $filterCount = (isset($search) ? 1 : 0) + (isset($type) ? 1 : 0) + ((isset($sort) && $sort !== 'date_desc') ? 1 : 0);
+                                    @endphp
+                                    @if($filterCount > 0)
+                                        <span class="filter-badge">{{ $filterCount }}</span>
+                                    @endif
+                                </button>
+                            </div>
+                        </div>
+                          <div class="collapse mt-3 filter-collapse" id="searchCollapse">
+                            <form action="{{ route('mouvements.index') }}" method="GET">                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="search">Produit</label>
+                                            <input type="text" class="form-control form-control-sm" id="search" name="search" placeholder="Nom du produit" value="{{ $search ?? '' }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="type">Type de mouvement</label>
+                                            <select class="form-control form-control-sm filter-select" id="type" name="type">
+                                                <option value="">Tous les types</option>
+                                                <option value="entrée" {{ isset($type) && $type == 'entrée' ? 'selected' : '' }}>Entrée</option>
+                                                <option value="sortie" {{ isset($type) && $type == 'sortie' ? 'selected' : '' }}>Sortie</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="sort">Trier par</label>
+                                            <select class="form-control form-control-sm filter-select" id="sort" name="sort">
+                                                <option value="date_desc" {{ isset($sort) && $sort == 'date_desc' ? 'selected' : '' }}>Date (récente d'abord)</option>
+                                                <option value="date_asc" {{ isset($sort) && $sort == 'date_asc' ? 'selected' : '' }}>Date (ancienne d'abord)</option>
+                                                <option value="produit_asc" {{ isset($sort) && $sort == 'produit_asc' ? 'selected' : '' }}>Produit (A-Z)</option>
+                                                <option value="produit_desc" {{ isset($sort) && $sort == 'produit_desc' ? 'selected' : '' }}>Produit (Z-A)</option>
+                                                <option value="quantite_desc" {{ isset($sort) && $sort == 'quantite_desc' ? 'selected' : '' }}>Quantité (élevée d'abord)</option>
+                                                <option value="quantite_asc" {{ isset($sort) && $sort == 'quantite_asc' ? 'selected' : '' }}>Quantité (faible d'abord)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 align-self-end filter-actions">
+                                        <button type="submit" class="btn btn-primary btn-sm">Appliquer</button>
+                                        <a href="{{ route('mouvements.index') }}" class="btn btn-secondary btn-sm btn-reset-filters">Réinitialiser</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                     
                     @if(session('success'))

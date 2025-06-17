@@ -23,7 +23,47 @@
             <div class="col">
                 <div class="card shadow">
                     <div class="card-header border-0">
-                        <h3 class="mb-0">Liste des Utilisateurs</h3>
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h3 class="mb-0">Liste des Utilisateurs</h3>
+                            </div>
+                            <div class="col-4 text-right">
+                                <button class="btn btn-sm {{ isset($search) || isset($role) ? 'btn-danger' : 'btn-primary' }}" type="button" data-toggle="collapse" data-target="#searchCollapse" aria-expanded="false" aria-controls="searchCollapse">
+                                    <i class="fas fa-filter"></i> Filtres
+                                    @if(isset($search) || isset($role))
+                                        <span class="filter-badge">{{ isset($search) && isset($role) ? '2' : '1' }}</span>
+                                    @endif
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="collapse mt-3 filter-collapse" id="searchCollapse">
+                            <form action="{{ route('user.index') }}" method="GET">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label for="search">Recherche</label>
+                                            <input type="text" class="form-control form-control-sm" id="search" name="search" placeholder="Nom ou email" value="{{ $search ?? '' }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label for="role">Rôle</label>
+                                            <select class="form-control form-control-sm filter-select" id="role" name="role">
+                                                <option value="">Tous les rôles</option>
+                                                @foreach($roles as $r)
+                                                    <option value="{{ $r }}" {{ isset($role) && $role == $r ? 'selected' : '' }}>{{ ucfirst($r) }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 align-self-end filter-actions">
+                                        <button type="submit" class="btn btn-primary btn-sm">Rechercher</button>
+                                        <a href="{{ route('user.index') }}" class="btn btn-secondary btn-sm btn-reset-filters">Réinitialiser</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                     
                     @if(session('success'))

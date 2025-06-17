@@ -16,16 +16,25 @@ class CategorieController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-    }
-
-    /**
+    }    /**
      * Display a listing of the categories.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\View\View
-     */    public function index()
+     */
+    public function index(Request $request)
     {
-        $categories = Categorie::paginate(10);
-        return view('categories.index', compact('categories'));
+        $search = $request->input('search');
+        
+        $query = Categorie::query();
+        
+        if ($search) {
+            $query->where('nom', 'like', '%' . $search . '%');
+        }
+        
+        $categories = $query->paginate(10)->withQueryString();
+        
+        return view('categories.index', compact('categories', 'search'));
     }
 
     /**

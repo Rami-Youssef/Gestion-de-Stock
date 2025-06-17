@@ -18,19 +18,57 @@ class MouvementStockController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-    }
-
-    /**
+    }    /**
      * Display a listing of the stock movements.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\View\View
-     */    public function index()
+     */    public function index(Request $request)
     {
-        $mouvements = MouvementStock::with(['produit', 'utilisateur'])
-            ->orderBy('date_cmd', 'desc')
-            ->paginate(10);
+        $search = $request->input('search');
+        $type = $request->input('type');
+        $sort = $request->input('sort', 'date_desc'); // Default sort is date descending
         
-        return view('mouvements.index', compact('mouvements'));
+        $query = MouvementStock::with(['produit', 'utilisateur']);
+        
+        if ($search) {
+            $query->whereHas('produit', function($q) use ($search) {
+                $q->where('nom', 'like', '%' . $search . '%');
+            });
+        }
+        
+        if ($type) {
+            $query->where('type', $type);
+        }
+        
+        // Apply sorting based on the selected option
+        switch ($sort) {
+            case 'date_asc':
+                $query->orderBy('date_cmd', 'asc');
+                break;
+            case 'quantite_desc':
+                $query->orderBy('quantite', 'desc');
+                break;
+            case 'quantite_asc':
+                $query->orderBy('quantite', 'asc');
+                break;            case 'produit_asc':
+                $query->join('produits', 'mouvement_stocks.produit_id', '=', 'produits.id')
+                      ->orderBy('produits.nom', 'asc')
+                      ->select('mouvement_stocks.*');
+                break;
+            case 'produit_desc':
+                $query->join('produits', 'mouvement_stocks.produit_id', '=', 'produits.id')
+                      ->orderBy('produits.nom', 'desc')
+                      ->select('mouvement_stocks.*');
+                break;
+            default:
+                $query->orderBy('date_cmd', 'desc');
+                break;
+        }
+        
+        $mouvements = $query->paginate(10)->withQueryString();
+        
+        return view('mouvements.index', compact('mouvements', 'search', 'type', 'sort'));
     }
 
     /**

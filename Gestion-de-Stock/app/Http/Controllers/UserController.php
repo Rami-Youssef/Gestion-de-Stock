@@ -27,12 +27,32 @@ class UserController extends Controller
     /**
      * Display a listing of the users
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = Utilisateur::paginate(10);
-        return view('users.index', compact('users'));
+        $search = $request->input('search');
+        $role = $request->input('role');
+        
+        $query = Utilisateur::query();
+        
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('utilisateur', 'like', '%' . $search . '%')
+                  ->orWhere('email', 'like', '%' . $search . '%');
+            });
+        }
+        
+        if ($role) {
+            $query->where('role', $role);
+        }
+        
+        $users = $query->paginate(10)->withQueryString();
+        
+        $roles = Utilisateur::select('role')->distinct()->pluck('role');
+        
+        return view('users.index', compact('users', 'search', 'role', 'roles'));
     }
     
     /**

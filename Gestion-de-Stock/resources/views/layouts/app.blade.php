@@ -15,10 +15,11 @@
         <!-- Extra details for Live View on GitHub Pages -->
 
         <!-- Icons -->
-        <link href="{{ asset('argon') }}/vendor/nucleo/css/nucleo.css" rel="stylesheet">
-        <link href="{{ asset('argon') }}/vendor/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+        <link href="{{ asset('argon') }}/vendor/nucleo/css/nucleo.css" rel="stylesheet">        <link href="{{ asset('argon') }}/vendor/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
         <!-- Argon CSS -->
         <link type="text/css" href="{{ asset('argon') }}/css/argon.css?v=1.0.0" rel="stylesheet">
+        <!-- Custom CSS -->
+        <link type="text/css" href="{{ asset('assets/css/custom.css') }}" rel="stylesheet">
     </head>
     <body class="{{ $class ?? '' }}">
         @auth
@@ -39,10 +40,12 @@
 
         <script src="{{ asset('argon') }}/vendor/jquery/dist/jquery.min.js"></script>
         <script src="{{ asset('argon') }}/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        
-        @stack('js')
+          @stack('js')
         
         <!-- Argon JS -->
         <script src="{{ asset('argon') }}/js/argon.js?v=1.0.0"></script>
+        
+        <!-- Search & Filter JS -->
+        <script src="{{ asset('assets/js/search-filters.js') }}"></script>
     </body>
 </html>

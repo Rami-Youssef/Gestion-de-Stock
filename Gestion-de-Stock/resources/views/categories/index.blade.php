@@ -22,7 +22,30 @@
             <div class="col">
                 <div class="card shadow">
                     <div class="card-header border-0">
-                        <h3 class="mb-0">Liste des Catégories</h3>
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h3 class="mb-0">Liste des Catégories</h3>
+                            </div>
+                            <div class="col-4">                                <form action="{{ route('categories.index') }}" method="GET" class="navbar-search form-inline mr-sm-3">
+                                    <div class="form-group mb-0">
+                                        <div class="input-group input-group-alternative">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                            </div>
+                                            <input class="form-control" placeholder="Rechercher..." type="text" name="search" value="{{ $search ?? '' }}">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary" type="submit">Rechercher</button>
+                                                @if(isset($search))
+                                                    <a href="{{ route('categories.index') }}" class="btn btn-secondary btn-reset-filters">
+                                                        <i class="fas fa-times"></i>
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                     
                     @if(session('success'))

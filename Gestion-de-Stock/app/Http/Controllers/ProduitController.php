@@ -17,16 +17,33 @@ class ProduitController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-    }
-
-    /**
+    }    /**
      * Display a listing of the products.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\View\View
-     */    public function index()
+     */
+    public function index(Request $request)
     {
-        $produits = Produit::with('categorie')->paginate(10);
-        return view('produits.index', compact('produits'));
+        $search = $request->input('search');
+        $category = $request->input('category');
+        
+        $query = Produit::with('categorie');
+          if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('nom', 'like', '%' . $search . '%')
+                  ->orWhere('reference', 'like', '%' . $search . '%');
+            });
+        }
+        
+        if ($category) {
+            $query->where('categorie_id', $category);
+        }
+        
+        $produits = $query->paginate(10)->withQueryString();
+        $categories = \App\Models\Categorie::all();
+        
+        return view('produits.index', compact('produits', 'categories', 'search', 'category'));
     }
 
     /**
