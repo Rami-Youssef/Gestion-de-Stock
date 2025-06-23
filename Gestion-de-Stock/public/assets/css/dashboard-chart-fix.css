@@ -1,0 +1,111 @@
+/* Dashboard ApexCharts Styling */
+
+/* Ensure chart area has proper interaction */
+.apexcharts-canvas {
+    position: relative !important;
+    z-index: 10;
+    pointer-events: auto !important;
+}
+
+/* Fix chart container positioning */
+.chart {
+    position: relative !important;
+    z-index: 10;
+}
+
+/* Prevent badge hover conflicts */
+.badge {
+    pointer-events: none;
+}
+
+/* Ensure proper chart responsiveness */
+.chart-container {
+    position: relative;
+    height: 350px;
+    overflow: hidden;
+}
+
+/* Chart legend styling */
+.chart-legend {
+    pointer-events: none;
+    user-select: none;
+}
+
+.legend-color {
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+/* ApexCharts specific styling */
+.apexcharts-tooltip {
+    background: rgba(0, 0, 0, 0.8) !important;
+    border: none !important;
+    border-radius: 4px !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+}
+
+.apexcharts-tooltip-title {
+    background: transparent !important;
+    border: none !important;
+    color: #fff !important;
+    font-weight: 600 !important;
+}
+
+.apexcharts-tooltip-series-group {
+    background: transparent !important;
+}
+
+.apexcharts-tooltip-text-value {
+    color: #fff !important;
+    font-weight: 500 !important;
+}
+
+.apexcharts-tooltip-text-label {
+    color: #ccc !important;
+}
+
+/* Fix any positioning issues */
+.card-header {
+    z-index: 1;
+}
+
+.card-body .chart {
+    z-index: 10;
+    position: relative;
+}
+
+/* Ensure proper stacking order */
+.navbar-nav {
+    z-index: 1;
+}
+
+.chart, 
+#chart-sales,
+#chart-orders {
+    z-index: 10;
+}
+
+/* ApexCharts responsive behavior */
+.apexcharts-svg {
+    background: transparent !important;
+}
+
+/* Legend improvements */
+.apexcharts-legend {
+    justify-content: center !important;
+}
+
+.apexcharts-legend-series {
+    margin: 0 8px !important;
+}
+
+/* Grid line styling for dark theme */
+.apexcharts-gridlines-horizontal line,
+.apexcharts-gridlines-vertical line {
+    stroke: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Axis text color */
+.apexcharts-text {
+    fill: #8898aa !important;
+}
