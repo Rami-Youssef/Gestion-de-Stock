@@ -26,9 +26,27 @@ class DashboardController extends Controller
      * Show the application dashboard.
      *
      * @return \Illuminate\View\View
-     */
-    public function index()
+     */    public function index(Request $request)
     {
+        // Get selected year or default to current year
+        $selectedYear = $request->get('year', Carbon::now()->year);
+        
+        // Get available years from stock movements
+        $availableYears = MouvementStock::selectRaw('YEAR(date_cmd) as year')
+            ->groupBy('year')
+            ->orderBy('year', 'desc')
+            ->pluck('year')
+            ->toArray();
+        
+        // If no movements exist, add current year
+        if (empty($availableYears)) {
+            $availableYears = [Carbon::now()->year];
+        }
+        
+        // Ensure selected year is valid
+        if (!in_array($selectedYear, $availableYears)) {
+            $selectedYear = $availableYears[0]; // Use most recent year
+        }
         // Get counts
         $totalCategories = Categorie::count();
         $totalProduits = Produit::count();
@@ -45,13 +63,13 @@ class DashboardController extends Controller
         $recentMouvements = MouvementStock::with(['produit', 'utilisateur'])
             ->orderBy('date_cmd', 'desc')
             ->take(5)
-            ->get();        // Get monthly stock movement monetary values for the current year
+            ->get();        // Get monthly stock movement monetary values for the selected year
         $monthlyMovements = MouvementStock::select(
                 DB::raw('MONTH(date_cmd) as month'),
                 DB::raw('SUM(quantite * (SELECT prix FROM produits WHERE produits.id = mouvement_stocks.produit_id)) as total_value'),
                 'type'
             )
-            ->whereYear('date_cmd', Carbon::now()->year)
+            ->whereYear('date_cmd', $selectedYear)
             ->groupBy('month', 'type')
             ->get()
             ->groupBy('month');
@@ -77,16 +95,16 @@ class DashboardController extends Controller
                 'entrées' => $entries,
                 'sorties' => $exits
             ];
-        }
-
-        return view('dashboard', compact(
+        }        return view('dashboard', compact(
             'totalCategories', 
             'totalProduits', 
             'totalMouvements', 
             'totalUtilisateurs',
             'lowStockProducts',
             'recentMouvements',
-            'chartData'
+            'chartData',
+            'selectedYear',
+            'availableYears'
         ));
     }
 }

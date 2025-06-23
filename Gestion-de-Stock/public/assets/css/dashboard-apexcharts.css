@@ -1,5 +1,40 @@
 /* Dashboard ApexCharts Styling */
 
+/* Year Selection Dropdown */
+.btn-outline-light {
+    border-color: rgba(255, 255, 255, 0.5);
+    color: #fff;
+}
+
+.btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: #fff;
+    color: #fff;
+}
+
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 0.5rem 2rem 0 rgba(0, 0, 0, 0.2);
+    border-radius: 0.375rem;
+}
+
+.dropdown-item.active {
+    background-color: #5e72e4;
+    color: #fff;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(94, 114, 228, 0.1);
+}
+
+.dropdown-header {
+    color: #8898aa;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
 /* Ensure chart area has proper interaction */
 .apexcharts-canvas {
     position: relative !important;

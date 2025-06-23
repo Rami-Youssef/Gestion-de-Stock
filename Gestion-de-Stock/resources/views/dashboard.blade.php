@@ -107,14 +107,29 @@
                         <div class="row align-items-center">
                             <div class="col">
                                 <h6 class="text-uppercase text-light ls-1 mb-1">Aperçu Financier</h6>
-                                <h2 class="text-white mb-0">Valeur des Mouvements de Stock ({{ date('Y') }})</h2>
+                                <h2 class="text-white mb-0">Valeur des Mouvements de Stock ({{ $selectedYear }})</h2>
                             </div>
                             <div class="col">
-                                <div class="text-right">
-                                    <span class="badge badge-primary badge-lg">
-                                        <i class="ni ni-calendar-grid-58"></i>
-                                        Année {{ date('Y') }}
-                                    </span>
+                                <div class="d-flex justify-content-end align-items-center">
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button" id="yearDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="ni ni-calendar-grid-58"></i>
+                                            Année {{ $selectedYear }}
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="yearDropdown">
+                                            <h6 class="dropdown-header">Sélectionner l'année</h6>
+                                            @foreach($availableYears as $year)
+                                                <a class="dropdown-item {{ $year == $selectedYear ? 'active' : '' }}" 
+                                                   href="{{ route('dashboard') }}?year={{ $year }}">
+                                                    <i class="ni ni-calendar-grid-58 mr-2"></i>
+                                                    {{ $year }}
+                                                    @if($year == \Carbon\Carbon::now()->year)
+                                                        <span class="badge badge-primary badge-sm ml-2">Actuelle</span>
+                                                    @endif
+                                                </a>
+                                            @endforeach
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -335,6 +350,24 @@
             window.addEventListener('beforeunload', function() {
                 if (stockChart) stockChart.destroy();
                 if (ordersChart) ordersChart.destroy();
+            });
+            
+            // Add year selection handler
+            document.querySelectorAll('#yearDropdown + .dropdown-menu .dropdown-item').forEach(function(item) {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var year = this.href.split('year=')[1];
+                    if (year && year !== '{{ $selectedYear }}') {
+                        // Show loading state
+                        var button = document.getElementById('yearDropdown');
+                        var originalText = button.innerHTML;
+                        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Chargement...';
+                        button.disabled = true;
+                        
+                        // Navigate to new year
+                        window.location.href = this.href;
+                    }
+                });
             });
         });
     </script>
