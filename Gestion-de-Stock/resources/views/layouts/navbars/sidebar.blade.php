@@ -6,7 +6,10 @@
         </button>
         <!-- Brand -->
         <a class="navbar-brand pt-0" href="{{ route('home') }}">
-            <img src="{{ asset('argon') }}/img/brand/blue.png" class="navbar-brand-img" alt="...">
+            <div class="brand-text">
+                <h1 class="h3 mb-0 text-primary font-weight-bold text-uppercase">Gestion de</h1>
+                <h1 class="h3 mb-0 text-primary font-weight-bold text-uppercase" style="margin-top: -5px;">Stock</h1>
+            </div>
         </a>
         <!-- User -->
         <ul class="nav align-items-center d-md-none">
@@ -42,7 +45,7 @@
                 <div class="row">
                     <div class="col-6 collapse-brand">
                         <a href="{{ route('home') }}">
-                            <img src="{{ asset('argon') }}/img/brand/blue.png">
+                            <h2 class="h4 mb-0 text-primary font-weight-bold text-uppercase">Gestion de Stock</h2>
                         </a>
                     </div>
                     <div class="col-6 collapse-close">

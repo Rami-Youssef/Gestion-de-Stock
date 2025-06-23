@@ -119,3 +119,108 @@
         width: 100%;
     }
 }
+
+/* Custom branding styles */
+.navbar-vertical .container-fluid {
+    overflow: visible !important;
+}
+
+.navbar-vertical .navbar-brand {
+    min-width: 160px !important;
+    max-width: 200px !important;
+    white-space: normal !important;
+    padding-right: 15px !important;
+    padding-left: 15px !important;
+    margin-right: 0 !important;
+}
+
+.navbar-vertical .navbar-brand .brand-text {
+    width: 100%;
+    display: block;
+}
+
+.navbar-vertical .navbar-brand h1,
+.navbar-vertical .navbar-brand h2 {
+    background: linear-gradient(87deg, #5e72e4 0, #825ee4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-decoration: none;
+    font-family: 'Open Sans', sans-serif;
+    letter-spacing: 0.05em;
+    font-size: 1.5rem !important;
+    line-height: 1.2;
+    text-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: all 0.15s ease;
+    white-space: nowrap !important;
+    word-wrap: normal !important;
+    overflow: visible !important;
+    text-overflow: visible !important;
+}
+
+.navbar-vertical .navbar-brand:hover h1,
+.navbar-vertical .navbar-brand:hover h2 {
+    background: linear-gradient(87deg, #324cdd 0, #7317dd 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transform: translateY(-1px);
+}
+
+/* Make main brand larger */
+.navbar-vertical .navbar-brand h1.h3 {
+    font-size: 1.75rem !important;
+    font-weight: 800 !important;
+}
+
+/* Additional stylish effects for branding */
+.navbar-vertical .navbar-brand {
+    position: relative;
+    overflow: visible !important;
+}
+
+.navbar-vertical .navbar-brand::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.navbar-vertical .navbar-brand:hover::before {
+    left: 100%;
+}
+
+/* Responsive font sizing */
+@media (max-width: 768px) {
+    .navbar-vertical .navbar-brand {
+        min-width: 140px !important;
+        max-width: 180px !important;
+    }
+    
+    .navbar-vertical .navbar-brand h1.h3 {
+        font-size: 1.4rem !important;
+    }
+    
+    .navbar-vertical .navbar-brand h2.h4 {
+        font-size: 1.1rem !important;
+    }
+}
+
+/* Fallback for browsers that don't support background-clip */
+@supports not (-webkit-background-clip: text) {
+    .navbar-vertical .navbar-brand h1,
+    .navbar-vertical .navbar-brand h2 {
+        color: #5e72e4 !important;
+        background: none;
+        -webkit-text-fill-color: initial;
+    }
+    
+    .navbar-vertical .navbar-brand:hover h1,
+    .navbar-vertical .navbar-brand:hover h2 {
+        color: #324cdd !important;
+    }
+}
