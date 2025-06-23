@@ -6,9 +6,12 @@ use App\Models\Produit;
 use App\Models\Categorie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Traits\ExportableTrait;
+use App\Exports\ProduitsExport;
 
 class ProduitController extends Controller
 {
+    use ExportableTrait;
     /**
      * Create a new controller instance.
      *
@@ -72,7 +75,7 @@ class ProduitController extends Controller
                 break;
         }
         
-        $produits = $query->paginate(10)->withQueryString();
+        $produits = $query->paginate(10)->appends(request()->query());
         $categories = \App\Models\Categorie::all();
         
         return view('produits.index', compact('produits', 'categories', 'search', 'category', 'sort'));
@@ -191,5 +194,112 @@ class ProduitController extends Controller
 
         return redirect()->route('produits.index')
             ->with('success', 'Produit supprimé avec succès');
+    }
+      public function exportExcel(Request $request)
+    {
+        return $this->handleExcelExport($request, ProduitsExport::class, 'Produits');
+    }
+
+    public function exportPdf(Request $request)
+    {
+        return $this->handlePdfExport($request, 'exports.produits-pdf', 'Produits', function($request, $allData) {
+            $query = Produit::with('categorie');
+
+            // Apply search filter
+            if ($request->has('search') && !empty($request->search)) {
+                $query->where(function($q) use ($request) {
+                    $q->where('nom', 'like', '%' . $request->search . '%')
+                      ->orWhere('reference', 'like', '%' . $request->search . '%')
+                      ->orWhereHas('categorie', function($subQ) use ($request) {
+                          $subQ->where('nom', 'like', '%' . $request->search . '%');
+                      });
+                });
+            }
+
+            // Apply category filter
+            if ($request->has('categorie') && !empty($request->categorie)) {
+                $query->where('categorie_id', $request->categorie);
+            }
+
+            // Apply stock filter
+            if ($request->has('stock') && !empty($request->stock)) {
+                switch ($request->stock) {
+                    case 'low':
+                        $query->where('quantite', '<', 10);
+                        break;
+                    case 'medium':
+                        $query->whereBetween('quantite', [10, 50]);
+                        break;
+                    case 'high':
+                        $query->where('quantite', '>', 50);
+                        break;
+                }
+            }
+
+            // Apply sorting
+            $sort = $request->get('sort', 'nom_asc');
+            switch ($sort) {
+                case 'nom_desc':
+                    $query->orderBy('nom', 'desc');
+                    break;
+                case 'prix_asc':
+                    $query->orderBy('prix', 'asc');
+                    break;
+                case 'prix_desc':
+                    $query->orderBy('prix', 'desc');
+                    break;
+                case 'quantite_asc':
+                    $query->orderBy('quantite', 'asc');
+                    break;
+                case 'quantite_desc':
+                    $query->orderBy('quantite', 'desc');
+                    break;
+                case 'categorie':
+                    $query->join('categories', 'produits.categorie_id', '=', 'categories.id')
+                          ->orderBy('categories.nom', 'asc');
+                    break;
+                case 'recent':
+                    $query->orderBy('created_at', 'desc');
+                    break;
+                default:
+                    $query->orderBy('nom', 'asc');
+                    break;
+            }
+
+            // If not exporting all data, apply pagination limit
+            if (!$allData) {
+                $query->limit(10);
+                if ($request->has('page')) {
+                    $offset = ($request->page - 1) * 10;
+                    $query->offset($offset);
+                }
+            }
+
+            $produits = $query->get();
+            
+            // Build filters array for display
+            $filters = [];
+            if ($request->has('search') && !empty($request->search)) {
+                $filters[] = 'Recherche: ' . $request->search;
+            }
+            if ($request->has('categorie') && !empty($request->categorie)) {
+                $categorie = Categorie::find($request->categorie);
+                $filters[] = 'Catégorie: ' . ($categorie ? $categorie->nom : 'N/A');
+            }
+            if ($request->has('stock') && !empty($request->stock)) {
+                $stockLabels = [
+                    'low' => 'Stock faible (< 10)',
+                    'medium' => 'Stock moyen (10-50)',
+                    'high' => 'Stock élevé (> 50)'
+                ];
+                $filters[] = $stockLabels[$request->stock] ?? 'Stock personnalisé';
+            }
+
+            return [
+                'produits' => $produits,
+                'scope' => $allData ? 'all' : 'current',
+                'filters' => $filters
+            ];
+        });
     }
 }

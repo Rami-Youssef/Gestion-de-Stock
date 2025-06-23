@@ -38,17 +38,25 @@ Route::group(['middleware' => 'auth'], function () {
     
     // Categories routes
     Route::resource('categories', CategorieController::class);
+    Route::get('categories/export/excel', [CategorieController::class, 'exportExcel'])->name('categories.export.excel');
+    Route::get('categories/export/pdf', [CategorieController::class, 'exportPdf'])->name('categories.export.pdf');
     
     // Products routes
     Route::resource('produits', ProduitController::class);
+    Route::get('produits/export/excel', [ProduitController::class, 'exportExcel'])->name('produits.export.excel');
+    Route::get('produits/export/pdf', [ProduitController::class, 'exportPdf'])->name('produits.export.pdf');
     
     // Stock movements routes
     Route::resource('mouvements', MouvementStockController::class)->except(['edit', 'update', 'destroy']);
     Route::post('mouvements/{mouvement}/cancel', [MouvementStockController::class, 'cancel'])->name('mouvements.cancel');
+    Route::get('mouvements/export/excel', [MouvementStockController::class, 'exportExcel'])->name('mouvements.export.excel');
+    Route::get('mouvements/export/pdf', [MouvementStockController::class, 'exportPdf'])->name('mouvements.export.pdf');
     
     // Admin only routes
     Route::group(['middleware' => 'role:admin'], function () {
         Route::resource('user', UserController::class);
+        Route::get('user/export/excel', [UserController::class, 'exportExcel'])->name('user.export.excel');
+        Route::get('user/export/pdf', [UserController::class, 'exportPdf'])->name('user.export.pdf');
     });
 });
 

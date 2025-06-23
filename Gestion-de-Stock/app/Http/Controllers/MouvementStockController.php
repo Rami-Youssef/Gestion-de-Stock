@@ -7,9 +7,12 @@ use App\Models\Produit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Http\Controllers\Traits\ExportableTrait;
+use App\Exports\MouvementsExport;
 
 class MouvementStockController extends Controller
 {
+    use ExportableTrait;
     /**
      * Create a new controller instance.
      *
@@ -66,7 +69,7 @@ class MouvementStockController extends Controller
                 break;
         }
         
-        $mouvements = $query->paginate(10)->withQueryString();
+        $mouvements = $query->paginate(10)->appends(request()->query());
         
         return view('mouvements.index', compact('mouvements', 'search', 'type', 'sort'));
     }
@@ -201,5 +204,98 @@ class MouvementStockController extends Controller
 
         return redirect()->route('mouvements.index')
             ->with('success', 'Mouvement de stock annulé avec succès');
+    }
+      public function exportExcel(Request $request)
+    {
+        return $this->handleExcelExport($request, MouvementsExport::class, 'Mouvements-Stock');
+    }
+
+    public function exportPdf(Request $request)
+    {
+        return $this->handlePdfExport($request, 'exports.mouvements-pdf', 'Mouvements-Stock', function($request, $allData) {
+            $query = MouvementStock::with(['produit', 'utilisateur']);
+
+            // Apply search filter
+            if ($request->has('search') && !empty($request->search)) {
+                $query->where(function($q) use ($request) {
+                    $q->whereHas('produit', function($subQ) use ($request) {
+                        $subQ->where('nom', 'like', '%' . $request->search . '%')
+                             ->orWhere('reference', 'like', '%' . $request->search . '%');
+                    })
+                    ->orWhereHas('utilisateur', function($subQ) use ($request) {
+                        $subQ->where('utilisateur', 'like', '%' . $request->search . '%');
+                    });
+                });
+            }
+
+            // Apply type filter
+            if ($request->has('type') && !empty($request->type)) {
+                $query->where('type', $request->type);
+            }
+
+            // Apply date range filter
+            if ($request->has('date_debut') && !empty($request->date_debut)) {
+                $query->whereDate('date_cmd', '>=', $request->date_debut);
+            }
+            if ($request->has('date_fin') && !empty($request->date_fin)) {
+                $query->whereDate('date_cmd', '<=', $request->date_fin);
+            }
+
+            // Apply sorting
+            $sort = $request->get('sort', 'date_desc');
+            switch ($sort) {
+                case 'date_asc':
+                    $query->orderBy('date_cmd', 'asc');
+                    break;
+                case 'produit':
+                    $query->join('produits', 'mouvement_stocks.produit_id', '=', 'produits.id')
+                          ->orderBy('produits.nom', 'asc');
+                    break;
+                case 'type':
+                    $query->orderBy('type', 'asc');
+                    break;
+                case 'quantite_asc':
+                    $query->orderBy('quantite', 'asc');
+                    break;
+                case 'quantite_desc':
+                    $query->orderBy('quantite', 'desc');
+                    break;
+                default:
+                    $query->orderBy('date_cmd', 'desc');
+                    break;
+            }
+
+            // If not exporting all data, apply pagination limit
+            if (!$allData) {
+                $query->limit(10);
+                if ($request->has('page')) {
+                    $offset = ($request->page - 1) * 10;
+                    $query->offset($offset);
+                }
+            }
+
+            $mouvements = $query->get();
+            
+            // Build filters array for display
+            $filters = [];
+            if ($request->has('search') && !empty($request->search)) {
+                $filters[] = 'Recherche: ' . $request->search;
+            }
+            if ($request->has('type') && !empty($request->type)) {
+                $filters[] = 'Type: ' . ucfirst($request->type);
+            }
+            if ($request->has('date_debut') && !empty($request->date_debut)) {
+                $filters[] = 'Date début: ' . Carbon::parse($request->date_debut)->format('d/m/Y');
+            }
+            if ($request->has('date_fin') && !empty($request->date_fin)) {
+                $filters[] = 'Date fin: ' . Carbon::parse($request->date_fin)->format('d/m/Y');
+            }
+
+            return [
+                'mouvements' => $mouvements,
+                'scope' => $allData ? 'all' : 'current',
+                'filters' => $filters
+            ];
+        });
     }
 }

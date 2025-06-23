@@ -6,9 +6,13 @@ use App\Models\Utilisateur;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Traits\ExportableTrait;
+use App\Exports\UsersExport;
 
 class UserController extends Controller
 {
+    use ExportableTrait;
+
     /**
      * Create a new controller instance.
      *
@@ -186,5 +190,76 @@ class UserController extends Controller
         
         return redirect()->route('user.index')
             ->with('success', 'Utilisateur supprimé avec succès.');
+    }
+    
+    public function exportExcel(Request $request)
+    {
+        return $this->handleExcelExport($request, UsersExport::class, 'Utilisateurs');
+    }
+
+    public function exportPdf(Request $request)
+    {
+        return $this->handlePdfExport($request, 'exports.users-pdf', 'Utilisateurs', function($request, $allData) {
+            $query = Utilisateur::query();
+
+            // Apply search filter
+            if ($request->has('search') && !empty($request->search)) {
+                $query->where(function($q) use ($request) {
+                    $q->where('nom', 'like', '%' . $request->search . '%')
+                      ->orWhere('prenom', 'like', '%' . $request->search . '%')
+                      ->orWhere('email', 'like', '%' . $request->search . '%');
+                });
+            }
+
+            // Apply role filter
+            if ($request->has('role') && !empty($request->role)) {
+                $query->where('role', $request->role);
+            }
+
+            // Apply sorting
+            $sort = $request->get('sort', 'nom_asc');
+            switch ($sort) {
+                case 'nom_desc':
+                    $query->orderBy('nom', 'desc');
+                    break;
+                case 'prenom_asc':
+                    $query->orderBy('prenom', 'asc');
+                    break;
+                case 'prenom_desc':
+                    $query->orderBy('prenom', 'desc');
+                    break;
+                case 'email_asc':
+                    $query->orderBy('email', 'asc');
+                    break;
+                case 'email_desc':
+                    $query->orderBy('email', 'desc');
+                    break;
+                case 'role_asc':
+                    $query->orderBy('role', 'asc');
+                    break;
+                case 'role_desc':
+                    $query->orderBy('role', 'desc');
+                    break;
+                case 'recent':
+                    $query->orderBy('created_at', 'desc');
+                    break;
+                default: // nom_asc
+                    $query->orderBy('nom', 'asc');
+                    break;
+            }
+
+            if ($allData) {
+                $users = $query->get();
+            } else {
+                $users = $query->paginate(15)->items();
+            }
+
+            return [
+                'users' => $users,
+                'search' => $request->search,
+                'role' => $request->role,
+                'sort' => $sort,
+            ];
+        });
     }
 }

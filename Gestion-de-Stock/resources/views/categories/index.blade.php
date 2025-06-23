@@ -21,11 +21,36 @@
         <div class="row">
             <div class="col">
                 <div class="card shadow">
-                    <div class="card-header border-0">
-                        <div class="row align-items-center">                            <div class="col-8">
+                    <div class="card-header border-0">                        <div class="row align-items-center">
+                            <div class="col-6">
                                 <h3 class="mb-0">Liste des Catégories</h3>
                             </div>
-                            <div class="col-4 text-right">
+                            <div class="col-6 text-right">
+                                <!-- Export Dropdown -->
+                                <div class="btn-group mr-2" role="group">
+                                    <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-download"></i> Exporter
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <h6 class="dropdown-header">Page Actuelle</h6>
+                                        <a class="dropdown-item" href="{{ route('categories.export.excel', array_merge(request()->query(), ['scope' => 'current'])) }}">
+                                            <i class="fas fa-file-excel text-success"></i> Excel (.xlsx)
+                                        </a>
+                                        <a class="dropdown-item" href="{{ route('categories.export.pdf', array_merge(request()->query(), ['scope' => 'current'])) }}">
+                                            <i class="fas fa-file-pdf text-danger"></i> PDF
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <h6 class="dropdown-header">Toutes les Données</h6>
+                                        <a class="dropdown-item" href="{{ route('categories.export.excel', array_merge(request()->query(), ['scope' => 'all'])) }}">
+                                            <i class="fas fa-file-excel text-success"></i> Excel Complet
+                                        </a>
+                                        <a class="dropdown-item" href="{{ route('categories.export.pdf', array_merge(request()->query(), ['scope' => 'all'])) }}">
+                                            <i class="fas fa-file-pdf text-danger"></i> PDF Complet
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <!-- Filter Button -->
                                 <button class="btn btn-sm {{ isset($search) || (isset($sort) && $sort !== 'nom_asc') ? 'btn-danger' : 'btn-primary' }}" type="button" data-toggle="collapse" data-target="#searchCollapse" aria-expanded="false" aria-controls="searchCollapse">
                                     <i class="fas fa-filter"></i> Filtres
                                     @php 
