@@ -2,7 +2,7 @@
 
 @section('content')
     @include('users.partials.header', [
-        'title' => $user->name,
+        'title' => $user->utilisateur,
         'description' => 'Détails de l\'utilisateur',
         'class' => 'col-lg-7'
     ])   

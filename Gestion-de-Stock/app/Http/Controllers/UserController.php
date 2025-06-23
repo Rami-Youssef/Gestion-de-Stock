@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Utilisateur;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -21,7 +22,7 @@ class UserController extends Controller
                 abort(403, 'Accès non autorisé.');
             }
             return $next($request);
-        })->except(['index', 'show']);
+        });
     }
 
     /**
@@ -77,7 +78,8 @@ class UserController extends Controller
                 break;
         }
         
-        $users = $query->paginate(10)->withQueryString();
+        // Apply pagination and keep query string for filters
+        $users = $query->paginate(10);
         
         $roles = Utilisateur::select('role')->distinct()->pluck('role');
         

@@ -134,7 +134,7 @@
                     </div>
                     <div class="card-footer py-4">
                         <nav class="d-flex justify-content-center" aria-label="...">
-                            {{ $users->links() }}
+                            {{ $users->withQueryString()->links() }}
                         </nav>
                     </div>
                 </div>
