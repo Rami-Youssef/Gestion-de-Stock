@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@push('css')
+    <link href="{{ asset('assets/css/dashboard-apexcharts.css') }}" rel="stylesheet">
+@endpush
+
 @section('content')
     <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
         <div class="container-fluid">
@@ -102,32 +106,40 @@
                     <div class="card-header bg-transparent">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h6 class="text-uppercase text-light ls-1 mb-1">Aperçu</h6>
-                                <h2 class="text-white mb-0">Mouvements de Stock ({{ date('Y') }})</h2>
+                                <h6 class="text-uppercase text-light ls-1 mb-1">Aperçu Financier</h6>
+                                <h2 class="text-white mb-0">Valeur des Mouvements de Stock ({{ date('Y') }})</h2>
                             </div>
                             <div class="col">
-                                <ul class="nav nav-pills justify-content-end">
-                                    <li class="nav-item mr-2 mr-md-0">
-                                        <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab">
-                                            <span class="d-none d-md-block">Année {{ date('Y') }}</span>
-                                            <span class="d-md-none">{{ date('Y') }}</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item" data-toggle="chart" data-target="#chart-sales" data-update='{"data":{"datasets":[{"data":[0, 20, 5, 25, 10, 30, 15, 40, 40]}]}}' data-prefix="$" data-suffix="k">
-                                        <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
-                                            <span class="d-none d-md-block">Week</span>
-                                            <span class="d-md-none">W</span>
-                                        </a>
-                                    </li>
-                                </ul>
+                                <div class="text-right">
+                                    <span class="badge badge-primary badge-lg">
+                                        <i class="ni ni-calendar-grid-58"></i>
+                                        Année {{ date('Y') }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
                         <!-- Chart -->
-                        <div class="chart">
-                            <!-- Chart wrapper -->
-                            <canvas id="chart-sales" class="chart-canvas"></canvas>
+                        <div class="chart" style="position: relative; height: 350px;">
+                            <div id="chart-sales" style="height: 100%;"></div>
+                        </div>
+                        <!-- Legend -->
+                        <div class="chart-legend mt-3">
+                            <div class="row">
+                                <div class="col-6 text-center">
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <div class="legend-color" style="width: 15px; height: 15px; background-color: #5e72e4; margin-right: 8px; border-radius: 2px;"></div>
+                                        <span class="text-sm text-muted">Entrées - Valeur (MAD)</span>
+                                    </div>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <div class="legend-color" style="width: 15px; height: 15px; background-color: #f5365c; margin-right: 8px; border-radius: 2px;"></div>
+                                        <span class="text-sm text-muted">Sorties - Valeur (MAD)</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -137,8 +149,7 @@
                     <div class="card-header bg-transparent">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h6 class="text-uppercase text-muted ls-1 mb-1">Performance</h6>
-                                <h2 class="mb-0">Total orders</h2>
+                                <h2 class="mb-0">Total des commandes</h2>
                             </div>
                         </div>
                     </div>
@@ -157,6 +168,174 @@
 @endsection
 
 @push('js')
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="{{ asset('argon') }}/vendor/chart.js/dist/Chart.min.js"></script>
     <script src="{{ asset('argon') }}/vendor/chart.js/dist/Chart.extension.js"></script>
+    <script>
+        // Stock Movements Chart (ApexCharts)
+        document.addEventListener('DOMContentLoaded', function() {
+            var chartData = @json($chartData);
+            
+            // Extract data for stock movements chart
+            var labels = chartData.map(function(item) {
+                return item.month;
+            });
+            
+            var entréesData = chartData.map(function(item) {
+                return item.entrées;
+            });
+            
+            var sortiesData = chartData.map(function(item) {
+                return item.sorties;
+            });
+
+            // Stock Movements Chart Configuration (ApexCharts)
+            var stockOptions = {
+                series: [
+                    {
+                        name: 'Valeur Entrées (MAD)',
+                        data: entréesData,
+                        color: '#5e72e4'
+                    },
+                    {
+                        name: 'Valeur Sorties (MAD)',
+                        data: sortiesData,
+                        color: '#f5365c'
+                    }
+                ],
+                chart: {
+                    type: 'line',
+                    height: 350,
+                    toolbar: {
+                        show: false
+                    },
+                    background: 'transparent',
+                    animations: {
+                        enabled: true,
+                        easing: 'easeinout',
+                        speed: 300
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 3,
+                    lineCap: 'round'
+                },
+                xaxis: {
+                    categories: labels,
+                    labels: {
+                        style: {
+                            colors: '#8898aa'
+                        }
+                    },
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    }
+                },
+                yaxis: {
+                    min: 0,
+                    labels: {
+                        style: {
+                            colors: '#8898aa'
+                        },
+                        formatter: function(value) {
+                            return value.toLocaleString('fr-FR', {
+                                style: 'currency',
+                                currency: 'MAD',
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 0
+                            }).replace('MAD', 'MAD');
+                        }
+                    }
+                },
+                grid: {
+                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                    strokeDashArray: 3,
+                    xaxis: {
+                        lines: {
+                            show: false
+                        }
+                    },
+                    yaxis: {
+                        lines: {
+                            show: true
+                        }
+                    }
+                },
+                legend: {
+                    show: false
+                },
+                tooltip: {
+                    enabled: true,
+                    shared: true,
+                    intersect: false,
+                    theme: 'dark',
+                    style: {
+                        fontSize: '12px'
+                    },
+                    y: {
+                        formatter: function(value) {
+                            return value.toLocaleString('fr-FR', {
+                                style: 'currency',
+                                currency: 'MAD',
+                                minimumFractionDigits: 2
+                            }).replace('MAD', 'MAD');
+                        }
+                    }
+                },
+                markers: {
+                    size: 4,
+                    strokeWidth: 2,
+                    strokeColors: '#fff',
+                    hover: {
+                        size: 6
+                    }
+                }
+            };
+            
+            // Create Stock Movements Chart (ApexCharts)
+            var stockChart = new ApexCharts(document.querySelector("#chart-sales"), stockOptions);
+            stockChart.render();
+            
+            // Orders Chart (Chart.js - Original Implementation)
+            var ordersCtx = document.getElementById('chart-orders').getContext('2d');
+            var ordersChart = new Chart(ordersCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Sales',
+                        data: [25, 20, 30, 22, 17, 29],
+                        backgroundColor: '#5e72e4'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+            
+            // Cleanup on page unload
+            window.addEventListener('beforeunload', function() {
+                if (stockChart) stockChart.destroy();
+                if (ordersChart) ordersChart.destroy();
+            });
+        });
+    </script>
 @endpush

@@ -45,12 +45,10 @@ class DashboardController extends Controller
         $recentMouvements = MouvementStock::with(['produit', 'utilisateur'])
             ->orderBy('date_cmd', 'desc')
             ->take(5)
-            ->get();
-
-        // Get monthly stock movement counts for the current year
+            ->get();        // Get monthly stock movement monetary values for the current year
         $monthlyMovements = MouvementStock::select(
                 DB::raw('MONTH(date_cmd) as month'),
-                DB::raw('COUNT(*) as count'),
+                DB::raw('SUM(quantite * (SELECT prix FROM produits WHERE produits.id = mouvement_stocks.produit_id)) as total_value'),
                 'type'
             )
             ->whereYear('date_cmd', Carbon::now()->year)
@@ -67,9 +65,9 @@ class DashboardController extends Controller
             if (isset($monthlyMovements[$i])) {
                 foreach ($monthlyMovements[$i] as $movement) {
                     if ($movement->type === 'entrée') {
-                        $entries = $movement->count;
+                        $entries = round($movement->total_value, 2);
                     } else {
-                        $exits = $movement->count;
+                        $exits = round($movement->total_value, 2);
                     }
                 }
             }
