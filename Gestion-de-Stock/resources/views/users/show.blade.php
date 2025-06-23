@@ -12,10 +12,9 @@
             <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
                 <div class="card card-profile shadow">
                     <div class="row justify-content-center">
-                        <div class="col-lg-3 order-lg-2">
-                            <div class="card-profile-image">
+                        <div class="col-lg-3 order-lg-2">                            <div class="card-profile-image">
                                 <a href="#">
-                                    <img src="{{ asset('argon') }}/img/theme/team-4-800x800.jpg" class="rounded-circle">
+                                    <img src="{{ asset('argon') }}/img/theme/default-avatar-detailed.svg" class="rounded-circle">
                                 </a>
                             </div>
                         </div>
