@@ -122,6 +122,11 @@
                                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                                                 @if(Auth::user()->role === 'admin')
                                                 <a class="dropdown-item" href="{{ route('user.edit', $user) }}">Modifier</a>
+                                                @if($user->id !== Auth::user()->id)
+                                                <button type="button" class="dropdown-item text-danger" data-toggle="modal" data-target="#deleteModal{{ $user->id }}">
+                                                    Supprimer
+                                                </button>
+                                                @endif
                                                 @endif
                                                 <a class="dropdown-item" href="{{ route('user.show', $user) }}">Voir le profil</a>
                                             </div>
@@ -143,4 +148,38 @@
         
         @include('layouts.footers.auth')
     </div>
+
+@foreach($users as $user)
+@if(Auth::user()->role === 'admin' && $user->id !== Auth::user()->id)
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal{{ $user->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ $user->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel{{ $user->id }}">Confirmer la suppression</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Êtes-vous sûr de vouloir supprimer l'utilisateur "<strong>{{ $user->utilisateur }}</strong>" ?
+                <br><br>
+                <strong>Email:</strong> {{ $user->email }}<br>
+                <strong>Rôle:</strong> {{ $user->role }}<br>
+                <br>
+                <small class="text-muted">Cette action est irréversible et supprimera tous les mouvements de stock associés à cet utilisateur.</small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <form action="{{ route('user.destroy', $user) }}" method="POST" style="display: inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+@endforeach
 @endsection

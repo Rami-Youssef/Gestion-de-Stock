@@ -127,14 +127,12 @@
                                         <div class="dropdown">
                                             <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fas fa-ellipsis-v"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                            </a>                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                                                 <a class="dropdown-item" href="{{ route('mouvements.show', $mouvement) }}">Voir</a>
                                                 @if(!$mouvement->canceled && Auth::user()->role === 'admin')
-                                                <form action="{{ route('mouvements.cancel', $mouvement) }}" method="POST" style="display: inline;">
-                                                    @csrf
-                                                    <button type="submit" class="dropdown-item" onclick="return confirm('Êtes-vous sûr de vouloir annuler ce mouvement?')">Annuler</button>
-                                                </form>
+                                                <button type="button" class="dropdown-item text-warning" data-toggle="modal" data-target="#cancelModal{{ $mouvement->id }}">
+                                                    Annuler
+                                                </button>
                                                 @endif
                                             </div>
                                         </div>
@@ -150,8 +148,41 @@
                     </div>
                 </div>
             </div>
-        </div>
-        
+        </div>        
         @include('layouts.footers.auth')
     </div>
+
+@foreach($mouvements as $mouvement)
+@if(!$mouvement->canceled && Auth::user()->role === 'admin')
+<!-- Cancel Modal -->
+<div class="modal fade" id="cancelModal{{ $mouvement->id }}" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel{{ $mouvement->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelModalLabel{{ $mouvement->id }}">Confirmer l'annulation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Êtes-vous sûr de vouloir annuler ce mouvement de stock ?
+                <br><br>
+                <strong>Produit:</strong> {{ $mouvement->produit->nom }}<br>
+                <strong>Type:</strong> {{ ucfirst($mouvement->type) }}<br>
+                <strong>Quantité:</strong> {{ $mouvement->quantite }}<br>
+                <br>
+                <small class="text-muted">Cette action marquera le mouvement comme annulé et ajustera les stocks en conséquence.</small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                <form action="{{ route('mouvements.cancel', $mouvement) }}" method="POST" style="display: inline;">
+                    @csrf
+                    <button type="submit" class="btn btn-warning">Annuler le mouvement</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+@endforeach
 @endsection

@@ -102,11 +102,9 @@
                                                 <i class="fas fa-ellipsis-v"></i>
                                             </a>                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                                                 <a class="dropdown-item" href="{{ route('categories.edit', ['category' => $categorie->id]) }}">Modifier</a>
-                                                <form action="{{ route('categories.destroy', ['category' => $categorie->id]) }}" method="POST" style="display: inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="dropdown-item" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie?')">Supprimer</button>
-                                                </form>
+                                                <button type="button" class="dropdown-item text-danger" data-toggle="modal" data-target="#deleteModal{{ $categorie->id }}">
+                                                    Supprimer
+                                                </button>
                                             </div>
                                         </div>
                                     </td>
@@ -121,8 +119,36 @@
                     </div>
                 </div>
             </div>
-        </div>
-        
+        </div>        
         @include('layouts.footers.auth')
     </div>
+
+@foreach($categories as $categorie)
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal{{ $categorie->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ $categorie->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel{{ $categorie->id }}">Confirmer la suppression</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Êtes-vous sûr de vouloir supprimer la catégorie "<strong>{{ $categorie->nom }}</strong>" ?
+                <br><br>
+                <small class="text-muted">Cette action est irréversible.</small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <form action="{{ route('categories.destroy', ['category' => $categorie->id]) }}" method="POST" style="display: inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
 @endsection

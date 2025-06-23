@@ -122,15 +122,12 @@
                                         <div class="dropdown">
                                             <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fas fa-ellipsis-v"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                            </a>                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                                                 <a class="dropdown-item" href="{{ route('produits.show', $produit) }}">Voir</a>
                                                 <a class="dropdown-item" href="{{ route('produits.edit', $produit) }}">Modifier</a>
-                                                <form action="{{ route('produits.destroy', $produit) }}" method="POST" style="display: inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="dropdown-item" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit?')">Supprimer</button>
-                                                </form>
+                                                <button type="button" class="dropdown-item text-danger" data-toggle="modal" data-target="#deleteModal{{ $produit->id }}">
+                                                    Supprimer
+                                                </button>
                                             </div>
                                         </div>
                                     </td>
@@ -145,8 +142,36 @@
                     </div>
                 </div>
             </div>
-        </div>
-        
+        </div>        
         @include('layouts.footers.auth')
     </div>
+
+@foreach($produits as $produit)
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal{{ $produit->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ $produit->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel{{ $produit->id }}">Confirmer la suppression</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Êtes-vous sûr de vouloir supprimer le produit "<strong>{{ $produit->nom }}</strong>" ?
+                <br><br>
+                <small class="text-muted">Cette action supprimera également tous les mouvements de stock associés à ce produit.</small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <form action="{{ route('produits.destroy', $produit) }}" method="POST" style="display: inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
 @endsection
