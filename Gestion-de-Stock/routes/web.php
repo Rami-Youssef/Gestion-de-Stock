@@ -20,10 +20,13 @@ use App\Http\Controllers\UserController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+    return view('auth.login');
 });
 
-Auth::routes();
+Auth::routes(['register' => false, 'reset' => false, 'verify' => false]);
 
 // Dashboard as home page
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
