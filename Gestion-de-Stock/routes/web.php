@@ -53,11 +53,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('mouvements', MouvementStockController::class)->except(['edit', 'update', 'destroy']);
     Route::post('mouvements/{mouvement}/cancel', [MouvementStockController::class, 'cancel'])->name('mouvements.cancel');
     Route::get('mouvements/export/excel', [MouvementStockController::class, 'exportExcel'])->name('mouvements.export.excel');
-    Route::get('mouvements/export/pdf', [MouvementStockController::class, 'exportPdf'])->name('mouvements.export.pdf');
+    Route::get('mouvements/export/pdf', [MouvementStockController::class, 'exportPdf'])->name('mouvements.export.pdf');      // User routes - Make index and create accessible to all users
+    Route::get('user', [UserController::class, 'index'])->name('user.index');
+    Route::get('user/create', [UserController::class, 'create'])->name('user.create');
+    Route::post('user', [UserController::class, 'store'])->name('user.store');
     
     // Admin only routes
     Route::group(['middleware' => 'role:admin'], function () {
-        Route::resource('user', UserController::class);
+        // User routes except index, create and store
+        Route::resource('user', UserController::class)->except(['index', 'create', 'store']);
         Route::get('user/export/excel', [UserController::class, 'exportExcel'])->name('user.export.excel');
         Route::get('user/export/pdf', [UserController::class, 'exportPdf'])->name('user.export.pdf');
     });

@@ -4,16 +4,13 @@
     <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
         <div class="container-fluid">
             <div class="header-body">
-                <div class="row">
-                    <div class="col">
+                <div class="row">                    <div class="col">
                         <h1 class="text-white mb-0">Gestion des Utilisateurs</h1>
                         <p class="text-white">Gérez les utilisateurs de votre système</p>
                     </div>
-                    @if(Auth::user()->role === 'admin')
                     <div class="col text-right">
                         <a href="{{ route('user.create') }}" class="btn btn-white">Nouvel Utilisateur</a>
                     </div>
-                    @endif
                 </div>
             </div>
         </div>

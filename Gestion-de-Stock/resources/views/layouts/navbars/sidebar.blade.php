@@ -75,19 +75,25 @@
                         <i class="ni ni-tag text-primary"></i>
                         <span class="nav-link-text">{{ __('Catégories') }}</span>
                     </a>
-                </li>
-                <li class="nav-item">
+                </li>                <li class="nav-item">
                     <a class="nav-link" href="{{ route('mouvements.index') }}">
                         <i class="ni ni-delivery-fast text-orange"></i>
                         <span class="nav-link-text">{{ __('Mouvements de Stock') }}</span>
                     </a>
                 </li>
                 
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('user.index') }}">
+                        <i class="ni ni-single-02 text-purple"></i>
+                        <span class="nav-link-text">{{ __('Table des Utilisateurs') }}</span>
+                    </a>
+                </li>
+                
                 @if(Auth::user()->role === 'admin')
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('user.index') }}">
-                        <i class="ni ni-circle-08 text-pink"></i>
-                        <span class="nav-link-text">{{ __('Gestion des Utilisateurs') }}</span>
+                        <i class="ni ni-circle-08 text-info"></i>
+                        <span class="nav-link-text">{{ __('Utilisateurs') }}</span>
                     </a>
                 </li>
                 @endif

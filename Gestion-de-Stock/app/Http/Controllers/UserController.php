@@ -11,22 +11,21 @@ use App\Exports\UsersExport;
 
 class UserController extends Controller
 {
-    use ExportableTrait;
-
-    /**
+    use ExportableTrait;    /**
      * Create a new controller instance.
      *
      * @return void
-     */
-    public function __construct()
+     */    public function __construct()
     {
         $this->middleware('auth');
         $this->middleware(function ($request, $next) {
-            if (auth()->user()->role !== 'admin') {
+            // Allow all authenticated users to access the index, create and store methods
+            $allowedMethods = ['index', 'create', 'store'];
+            if (!in_array($request->route()->getActionMethod(), $allowedMethods) && auth()->user()->role !== 'admin') {
                 abort(403, 'Accès non autorisé.');
             }
             return $next($request);
-        });
+        })->except(['index', 'create', 'store']);
     }
 
     /**
