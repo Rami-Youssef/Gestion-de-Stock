@@ -4,13 +4,14 @@
     <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
         <div class="container-fluid">
             <div class="header-body">
-                <div class="row">
-                    <div class="col">
+                <div class="row">                    <div class="col">
                         <h1 class="text-white mb-0">Mouvements de Stock</h1>
                         <p class="text-white">Suivez les entrées et sorties de stock</p>
                     </div>
                     <div class="col text-right">
-                        <a href="{{ route('mouvements.create') }}" class="btn btn-white">Nouveau Mouvement</a>
+                        @if(Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin')
+                            <a href="{{ route('mouvements.create') }}" class="btn btn-white">Nouveau Mouvement</a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -152,11 +153,15 @@
                                         <div class="dropdown">
                                             <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fas fa-ellipsis-v"></i>
-                                            </a>                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                                <a class="dropdown-item" href="{{ route('mouvements.show', $mouvement) }}">Voir</a>
-                                                @if(!$mouvement->canceled && Auth::user()->role === 'admin')
+                                            </a>                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">                                                <a class="dropdown-item" href="{{ route('mouvements.show', $mouvement) }}">Voir</a>
+                                                @if(!$mouvement->canceled && (Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin'))
                                                 <button type="button" class="dropdown-item text-warning" data-toggle="modal" data-target="#cancelModal{{ $mouvement->id }}">
                                                     Annuler
+                                                </button>
+                                                @endif
+                                                @if(Auth::user()->role === 'super_admin')
+                                                <button type="button" class="dropdown-item text-danger" data-toggle="modal" data-target="#deleteModal{{ $mouvement->id }}">
+                                                    Supprimer
                                                 </button>
                                                 @endif
                                             </div>
@@ -178,7 +183,7 @@
     </div>
 
 @foreach($mouvements as $mouvement)
-@if(!$mouvement->canceled && Auth::user()->role === 'admin')
+@if(!$mouvement->canceled && (Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin'))
 <!-- Cancel Modal -->
 <div class="modal fade" id="cancelModal{{ $mouvement->id }}" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel{{ $mouvement->id }}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -203,6 +208,38 @@
                 <form action="{{ route('mouvements.cancel', $mouvement) }}" method="POST" style="display: inline;">
                     @csrf
                     <button type="submit" class="btn btn-warning">Annuler le mouvement</button>
+                </form>            </div>
+        </div>
+    </div>
+</div>
+@endif
+
+@if(Auth::user()->role === 'super_admin')
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal{{ $mouvement->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ $mouvement->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel{{ $mouvement->id }}">Confirmer la suppression</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Êtes-vous sûr de vouloir supprimer définitivement ce mouvement de stock ?
+                <br><br>
+                <strong>Produit:</strong> {{ $mouvement->produit->nom }}<br>
+                <strong>Type:</strong> {{ ucfirst($mouvement->type) }}<br>
+                <strong>Quantité:</strong> {{ $mouvement->quantite }}<br>
+                <br>
+                <small class="text-muted text-danger">Cette action est irréversible et supprimera complètement le mouvement de l'historique.</small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <form action="{{ route('mouvements.destroy', $mouvement) }}" method="POST" style="display: inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
                 </form>
             </div>
         </div>

@@ -4,13 +4,14 @@
     <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
         <div class="container-fluid">
             <div class="header-body">
-                <div class="row">
-                    <div class="col">
+                <div class="row">                    <div class="col">
                         <h1 class="text-white mb-0">Gestion des Produits</h1>
                         <p class="text-white">Gérez les produits dans votre inventaire</p>
                     </div>
                     <div class="col text-right">
+                        @if(Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin')
                         <a href="{{ route('produits.create') }}" class="btn btn-white">Nouveau Produit</a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -147,12 +148,15 @@
                                         <div class="dropdown">
                                             <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fas fa-ellipsis-v"></i>
-                                            </a>                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                                <a class="dropdown-item" href="{{ route('produits.show', $produit) }}">Voir</a>
+                                            </a>                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">                                            <a class="dropdown-item" href="{{ route('produits.show', $produit) }}">Voir</a>
+                                                @if(Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin')
                                                 <a class="dropdown-item" href="{{ route('produits.edit', $produit) }}">Modifier</a>
+                                                @endif
+                                                @if(Auth::user()->role === 'super_admin')
                                                 <button type="button" class="dropdown-item text-danger" data-toggle="modal" data-target="#deleteModal{{ $produit->id }}">
                                                     Supprimer
                                                 </button>
+                                                @endif
                                             </div>
                                         </div>
                                     </td>

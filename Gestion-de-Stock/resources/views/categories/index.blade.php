@@ -4,13 +4,14 @@
     <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
         <div class="container-fluid">
             <div class="header-body">
-                <div class="row">
-                    <div class="col">
+                <div class="row">                    <div class="col">
                         <h1 class="text-white mb-0">Gestion des Catégories</h1>
                         <p class="text-white">Gérez les catégories de produits dans votre inventaire</p>
                     </div>
                     <div class="col text-right">
+                        @if(Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin')
                         <a href="{{ route('categories.create') }}" class="btn btn-white">Nouvelle Catégorie</a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -120,16 +121,19 @@
                                 <tr>
                                     <td>{{ $categorie->id }}</td>
                                     <td>{{ $categorie->nom }}</td>
-                                    <td>{{ $categorie->produits->count() }}</td>
-                                    <td>
+                                    <td>{{ $categorie->produits->count() }}</td>                                    <td>
                                         <div class="dropdown">
                                             <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fas fa-ellipsis-v"></i>
-                                            </a>                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                                <a class="dropdown-item" href="{{ route('categories.edit', ['category' => $categorie->id]) }}">Modifier</a>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">                                                @if(Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin')
+                                                <a class="dropdown-item" href="{{ route('categories.edit', ['categorie' => $categorie->id]) }}">Modifier</a>
+                                                @endif
+                                                @if(Auth::user()->role === 'super_admin')
                                                 <button type="button" class="dropdown-item text-danger" data-toggle="modal" data-target="#deleteModal{{ $categorie->id }}">
                                                     Supprimer
                                                 </button>
+                                                @endif
                                             </div>
                                         </div>
                                     </td>
@@ -165,8 +169,7 @@
                 <small class="text-muted">Cette action est irréversible.</small>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                <form action="{{ route('categories.destroy', ['category' => $categorie->id]) }}" method="POST" style="display: inline;">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>                <form action="{{ route('categories.destroy', ['categorie' => $categorie->id]) }}" method="POST" style="display: inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger">Supprimer</button>

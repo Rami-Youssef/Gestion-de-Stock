@@ -61,9 +61,10 @@
                             <div class="col-md-4 font-weight-bold">Valeur en stock :</div>
                             <div class="col-md-8">{{ number_format($produit->quantite * $produit->prix, 2) }} MAD</div>
                         </div>
-                        
-                        <div class="text-center mt-4">
-                            <a href="{{ route('mouvements.create') }}" class="btn btn-primary">Nouveau mouvement de stock</a>
+                          <div class="text-center mt-4">
+                            @if(Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin')
+                                <a href="{{ route('mouvements.create') }}" class="btn btn-primary">Nouveau mouvement de stock</a>
+                            @endif
                         </div>
                     </div>
                 </div>

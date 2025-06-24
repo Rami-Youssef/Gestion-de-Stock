@@ -81,19 +81,11 @@
                         <span class="nav-link-text">{{ __('Mouvements de Stock') }}</span>
                     </a>
                 </li>
-                
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('user.index') }}">
-                        <i class="ni ni-single-02 text-purple"></i>
-                        <span class="nav-link-text">{{ __('Table des Utilisateurs') }}</span>
-                    </a>
-                </li>
-                
-                @if(Auth::user()->role === 'admin')
+                  @if(Auth::user()->role === 'super_admin')
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('user.index') }}">
                         <i class="ni ni-circle-08 text-info"></i>
-                        <span class="nav-link-text">{{ __('Utilisateurs') }}</span>
+                        <span class="nav-link-text">{{ __('Gestion des Utilisateurs') }}</span>
                     </a>
                 </li>
                 @endif
