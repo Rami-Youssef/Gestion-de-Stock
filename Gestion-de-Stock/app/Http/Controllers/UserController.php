@@ -18,14 +18,15 @@ class UserController extends Controller
      */    public function __construct()
     {
         $this->middleware('auth');
+        // Allow all authenticated users to access all methods
         $this->middleware(function ($request, $next) {
-            // Allow all authenticated users to access the index, create and store methods
-            $allowedMethods = ['index', 'create', 'store'];
-            if (!in_array($request->route()->getActionMethod(), $allowedMethods) && auth()->user()->role !== 'admin') {
-                abort(403, 'Accès non autorisé.');
+            // Only restrict export methods to admin
+            $exportMethods = ['exportExcel', 'exportPdf'];
+            if (in_array($request->route()->getActionMethod(), $exportMethods) && auth()->user()->role !== 'admin') {
+                abort(403, 'Accès non autorisé aux fonctions d\'export.');
             }
             return $next($request);
-        })->except(['index', 'create', 'store']);
+        });
     }
 
     /**
@@ -88,14 +89,12 @@ class UserController extends Controller
         
         return view('users.index', compact('users', 'search', 'role', 'roles', 'sort'));
     }
-    
-    /**
+      /**
      * Show the user profile
      *
      * @param  \App\Models\Utilisateur  $user
      * @return \Illuminate\View\View
-     */
-    public function show(Utilisateur $user)
+     */    public function show(Utilisateur $user)
     {
         return view('users.show', compact('user'));
     }

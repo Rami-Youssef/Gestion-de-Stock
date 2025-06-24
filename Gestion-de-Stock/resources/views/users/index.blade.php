@@ -140,15 +140,12 @@
                                         <div class="dropdown">
                                             <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fas fa-ellipsis-v"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                                @if(Auth::user()->role === 'admin')
+                                            </a>                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                                                 <a class="dropdown-item" href="{{ route('user.edit', $user) }}">Modifier</a>
                                                 @if($user->id !== Auth::user()->id)
                                                 <button type="button" class="dropdown-item text-danger" data-toggle="modal" data-target="#deleteModal{{ $user->id }}">
                                                     Supprimer
                                                 </button>
-                                                @endif
                                                 @endif
                                                 <a class="dropdown-item" href="{{ route('user.show', $user) }}">Voir le profil</a>
                                             </div>
@@ -172,7 +169,7 @@
     </div>
 
 @foreach($users as $user)
-@if(Auth::user()->role === 'admin' && $user->id !== Auth::user()->id)
+@if($user->id !== Auth::user()->id)
 <!-- Delete Modal -->
 <div class="modal fade" id="deleteModal{{ $user->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ $user->id }}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
