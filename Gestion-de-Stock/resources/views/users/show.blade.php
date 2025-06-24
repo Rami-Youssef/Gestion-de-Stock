@@ -28,9 +28,8 @@
                         <div class="text-center">
                             <h3>
                                 {{ $user->utilisateur }}
-                            </h3>
-                            <div class="h5 mt-4">
-                                <i class="ni business_briefcase-24 mr-2"></i>{{ __('Rôle: ') . $user->role }}
+                            </h3>                            <div class="h5 mt-4">
+                                <i class="ni business_briefcase-24 mr-2"></i>{{ __('Rôle: ') }}@roleDisplay($user->role)
                             </div>
                             <div>
                                 <i class="ni ni-email-83 mr-2"></i>{{ $user->email }}

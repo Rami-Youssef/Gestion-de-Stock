@@ -21,13 +21,11 @@ class CheckRole
         // Check if user is logged in
         if (!Auth::check()) {
             return redirect('login');
-        }
-
-        // Check if user has the required role
+        }        // Check if user has the required role
         $userRole = Auth::user()->role;
 
-        // If admin, allow access to all routes
-        if ($userRole === 'admin') {
+        // If admin or super_admin, allow access to all routes
+        if ($userRole === 'admin' || $userRole === 'super_admin') {
             return $next($request);
         }
 

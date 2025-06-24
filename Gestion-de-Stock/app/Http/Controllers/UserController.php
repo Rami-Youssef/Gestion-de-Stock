@@ -20,9 +20,10 @@ class UserController extends Controller
         $this->middleware('auth');
         // Allow all authenticated users to access all methods
         $this->middleware(function ($request, $next) {
-            // Only restrict export methods to admin
+            // Only restrict export methods to admin and super_admin
             $exportMethods = ['exportExcel', 'exportPdf'];
-            if (in_array($request->route()->getActionMethod(), $exportMethods) && auth()->user()->role !== 'admin') {
+            if (in_array($request->route()->getActionMethod(), $exportMethods) && 
+                !in_array(auth()->user()->role, ['admin', 'super_admin'])) {
                 abort(403, 'Accès non autorisé aux fonctions d\'export.');
             }
             return $next($request);

@@ -74,10 +74,19 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="role">Rôle</label>
-                                            <select class="form-control form-control-sm filter-select" id="role" name="role">
-                                                <option value="">Tous les rôles</option>
+                                            <select class="form-control form-control-sm filter-select" id="role" name="role">                                                <option value="">Tous les rôles</option>
                                                 @foreach($roles as $r)
-                                                    <option value="{{ $r }}" {{ isset($role) && $role == $r ? 'selected' : '' }}>{{ ucfirst($r) }}</option>
+                                                    <option value="{{ $r }}" {{ isset($role) && $role == $r ? 'selected' : '' }}>
+                                                        @if($r == 'user')
+                                                            Utilisateur
+                                                        @elseif($r == 'admin')
+                                                            Administrateur
+                                                        @elseif($r == 'super_admin')
+                                                            Super Administrateur
+                                                        @else
+                                                            {{ ucfirst($r) }}
+                                                        @endif
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -130,11 +139,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($users as $user)
-                                <tr>
+                                @foreach ($users as $user)                                <tr>
                                     <td>{{ $user->utilisateur }}</td>
                                     <td>{{ $user->email }}</td>
-                                    <td>{{ $user->role }}</td>
+                                    <td>@roleDisplay($user->role)</td>
                                     <td>{{ $user->created_at->format('d/m/Y') }}</td>
                                     <td class="text-right">
                                         <div class="dropdown">
@@ -182,9 +190,8 @@
             </div>
             <div class="modal-body">
                 Êtes-vous sûr de vouloir supprimer l'utilisateur "<strong>{{ $user->utilisateur }}</strong>" ?
-                <br><br>
-                <strong>Email:</strong> {{ $user->email }}<br>
-                <strong>Rôle:</strong> {{ $user->role }}<br>
+                <br><br>                <strong>Email:</strong> {{ $user->email }}<br>
+                <strong>Rôle:</strong> @roleDisplay($user->role)<br>
                 <br>
                 <small class="text-muted">Cette action est irréversible et supprimera tous les mouvements de stock associés à cet utilisateur.</small>
             </div>

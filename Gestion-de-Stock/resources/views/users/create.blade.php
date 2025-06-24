@@ -56,13 +56,12 @@
                             <div class="form-group">
                                 <label for="password_confirmation" class="form-control-label">Confirmation du mot de passe</label>
                                 <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" required>
-                            </div>
-                            
-                            <div class="form-group">
+                            </div>                            <div class="form-group">
                                 <label for="role" class="form-control-label">Rôle</label>
                                 <select name="role" id="role" class="form-control" required>
-                                    <option value="utilisateur" {{ old('role') == 'utilisateur' ? 'selected' : '' }}>Utilisateur</option>
+                                    <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>Utilisateur</option>
                                     <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Administrateur</option>
+                                    <option value="super_admin" {{ old('role') == 'super_admin' ? 'selected' : '' }}>Super Administrateur</option>
                                 </select>
                             </div>
                             

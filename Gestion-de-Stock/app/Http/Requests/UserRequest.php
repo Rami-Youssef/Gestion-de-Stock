@@ -34,9 +34,8 @@ class UserRequest extends FormRequest
             ],
             'password' => [
                 $this->route()->user ? 'nullable' : 'required', 'confirmed', 'min:6'
-            ],
-            'role' => [
-                'required', Rule::in(['admin', 'utilisateur'])
+            ],            'role' => [
+                'required', Rule::in(['admin', 'super_admin', 'user'])
             ]
         ];
     }

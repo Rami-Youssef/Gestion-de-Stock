@@ -55,12 +55,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('mouvements/export/excel', [MouvementStockController::class, 'exportExcel'])->name('mouvements.export.excel');
     Route::get('mouvements/export/pdf', [MouvementStockController::class, 'exportPdf'])->name('mouvements.export.pdf');      // All user routes accessible to all users
     Route::resource('user', UserController::class);
-    
-    // Admin only routes for exports
-    Route::group(['middleware' => 'role:admin'], function () {
-        // User exports routes
-        Route::get('user/export/excel', [UserController::class, 'exportExcel'])->name('user.export.excel');
-        Route::get('user/export/pdf', [UserController::class, 'exportPdf'])->name('user.export.pdf');
+      // Admin and super_admin routes for exports
+    Route::middleware('auth')->group(function () {
+        // User exports routes - access is checked in the controller
         Route::get('user/export/excel', [UserController::class, 'exportExcel'])->name('user.export.excel');
         Route::get('user/export/pdf', [UserController::class, 'exportPdf'])->name('user.export.pdf');
     });
