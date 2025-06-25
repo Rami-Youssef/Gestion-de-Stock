@@ -76,8 +76,7 @@
                             <strong>Ce mouvement a été annulé.</strong> Son effet sur le stock a été contrebalancé.
                         </div>
                         @endif
-                        
-                        @if(!$mouvement->canceled && Auth::user()->role === 'admin')
+                          @if(!$mouvement->canceled && (Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin'))
                         <div class="text-center mt-4">
                             <form action="{{ route('mouvements.cancel', $mouvement) }}" method="POST">
                                 @csrf

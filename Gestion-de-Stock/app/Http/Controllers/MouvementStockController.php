@@ -157,11 +157,10 @@ class MouvementStockController extends Controller
      *
      * @param  \App\Models\MouvementStock  $mouvement
      * @return \Illuminate\Http\RedirectResponse
-     */
-    public function cancel(MouvementStock $mouvement)
+     */    public function cancel(MouvementStock $mouvement)
     {
-        // Only allow cancellation if the user has admin role
-        if (Auth::user()->role !== 'admin') {
+        // Only allow cancellation if the user has admin or super_admin role
+        if (Auth::user()->role !== 'admin' && Auth::user()->role !== 'super_admin') {
             return redirect()->route('mouvements.index')
                 ->with('error', 'Seuls les administrateurs peuvent annuler les mouvements de stock');
         }
