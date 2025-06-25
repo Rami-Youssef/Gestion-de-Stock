@@ -54,12 +54,7 @@
         
         <div class="card bg-secondary shadow border-0">
             <div class="card-body px-lg-5 py-lg-5">
-                <div class="text-center text-muted mb-4">
-                    <small>
-                        Identifiants de test:<br>
-                        <strong>admin@gestion-stock.com</strong> / <strong>admin123</strong>
-                    </small>
-                </div>
+                
                 
                 <form role="form" method="POST" action="{{ route('login') }}">
                     @csrf

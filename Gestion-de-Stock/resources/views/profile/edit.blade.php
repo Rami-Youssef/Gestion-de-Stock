@@ -11,21 +11,12 @@
         <div class="row">
             <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
                 <div class="card card-profile shadow">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-3 order-lg-2">
-                            <div class="card-profile-image">
-                                <a href="#">
-                                    <img src="{{ asset('argon') }}/img/theme/default-avatar-detailed.svg" class="rounded-circle">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
+                    <div class="card-header text-center border-0 pt-4 pb-0 pb-md-4">
                         <div class="d-flex justify-content-center">
                             <h5>{{ __('Informations utilisateur') }}</h5>
                         </div>
                     </div>
-                    <div class="card-body pt-0 pt-md-4">
+                    <div class="card-body pt-3">
                         <div class="text-center">
                             <h3>
                                 {{ auth()->user()->utilisateur }}
