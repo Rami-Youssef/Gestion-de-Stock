@@ -74,7 +74,18 @@ class DashboardController extends Controller
             ->get()
             ->groupBy('month');
         
-        // Format data for chart
+        // Calculate order counts per month
+        $monthlyOrderCounts = MouvementStock::select(
+            DB::raw('MONTH(date_cmd) as month'),
+            DB::raw('COUNT(*) as total_count')
+        )
+        ->whereYear('date_cmd', $selectedYear)
+        ->groupBy('month')
+        ->get()
+        ->pluck('total_count', 'month')
+        ->toArray();
+
+        // Format data for charts
         $chartData = [];
         for ($i = 1; $i <= 12; $i++) {
             $entries = 0;
@@ -93,7 +104,8 @@ class DashboardController extends Controller
             $chartData[] = [
                 'month' => Carbon::create(null, $i, 1)->format('M'),
                 'entrées' => $entries,
-                'sorties' => $exits
+                'sorties' => $exits,
+                'commandes' => isset($monthlyOrderCounts[$i]) ? $monthlyOrderCounts[$i] : 0
             ];
         }        return view('dashboard', compact(
             'totalCategories', 

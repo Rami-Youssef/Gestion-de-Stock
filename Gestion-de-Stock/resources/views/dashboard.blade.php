@@ -318,15 +318,21 @@
             var stockChart = new ApexCharts(document.querySelector("#chart-sales"), stockOptions);
             stockChart.render();
             
-            // Orders Chart (Chart.js - Original Implementation)
+            // Orders Chart (Chart.js - Dynamic Implementation)
             var ordersCtx = document.getElementById('chart-orders').getContext('2d');
+            
+            // Get command counts from our chart data
+            var commandeData = chartData.map(function(item) {
+                return item.commandes;
+            });
+            
             var ordersChart = new Chart(ordersCtx, {
                 type: 'bar',
                 data: {
-                    labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    labels: labels, // Use the same months as the stock movement chart
                     datasets: [{
-                        label: 'Sales',
-                        data: [25, 20, 30, 22, 17, 29],
+                        label: 'Total Commandes',
+                        data: commandeData,
                         backgroundColor: '#5e72e4'
                     }]
                 },
@@ -339,7 +345,12 @@
                     scales: {
                         yAxes: [{
                             ticks: {
-                                beginAtZero: true
+                                beginAtZero: true,
+                                callback: function(value) {
+                                    if (Math.floor(value) === value) {
+                                        return value;
+                                    }
+                                }
                             }
                         }]
                     }

@@ -15,12 +15,28 @@ class AdminUtilisateurSeeder extends Seeder
      */
     public function run()
     {
-        // Create an admin user for easy login
+        // Create a super_admin user
         Utilisateur::create([
-            'utilisateur' => 'admin',
-            'email' => 'admin@gestion-stock.com',
-            'motdepasse' => Hash::make('admin123'),
+            'utilisateur' => 'Super Administrateur',
+            'email' => 'superadmin@gmail.com',
+            'motdepasse' => Hash::make('11111111'),
+            'role' => 'super_admin'
+        ]);
+        
+        // Create an admin user
+        Utilisateur::create([
+            'utilisateur' => 'Administrateur',
+            'email' => 'admin@gmail.com',
+            'motdepasse' => Hash::make('11111111'),
             'role' => 'admin'
+        ]);
+        
+        // Create a regular user
+        Utilisateur::create([
+            'utilisateur' => 'Utilisateur',
+            'email' => 'user@gmail.com',
+            'motdepasse' => Hash::make('11111111'),
+            'role' => 'user'
         ]);
     }
 }

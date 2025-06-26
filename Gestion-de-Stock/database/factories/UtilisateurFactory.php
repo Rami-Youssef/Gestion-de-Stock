@@ -19,8 +19,8 @@ class UtilisateurFactory extends Factory
         return [
             'utilisateur' => $this->faker->userName,
             'email' => $this->faker->unique()->safeEmail,
-            'motdepasse' => bcrypt('password'),
-            'role' => $this->faker->randomElement(['admin', 'utilisateur', 'gestionnaire']),
+            'motdepasse' => bcrypt('11111111'),
+            'role' => $this->faker->randomElement(['admin', 'super_admin', 'user']),
         ];
     }
 }

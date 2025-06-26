@@ -13,13 +13,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // Run our custom seeders
+        // Only create the required user accounts for production
+        // No fake data for categories, products or movements
         $this->call([
-            AdminUtilisateurSeeder::class, // Admin user first
-            CategorieSeeder::class,
-            UtilisateurSeeder::class,
-            ProduitSeeder::class,
-            MouvementStockSeeder::class,
+            AdminUtilisateurSeeder::class, // Create all our users (super_admin, admin, user)
         ]);
     }
 }
